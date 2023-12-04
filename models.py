@@ -2,6 +2,7 @@ import numpy as np
 import scipy.stats as sps
 from scipy.special import expit as expit
 from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LinearRegression
 
 
 class LinearModel:
@@ -57,7 +58,9 @@ class RegressionModel(LinearModel):
         )
 
     def fit(self):
-        self.w = np.linalg.inv(self.X.T @ self.X + self.alpha * np.identity(self.n)) @ self.X.T @ self.y
+        #self.w = np.linalg.inv(self.X.T @ self.X + self.alpha * np.identity(self.n)) @ self.X.T @ self.y
+        self.w = np.linalg.inv(self.X.T @ self.X) @ self.X.T @ self.y
+        #self.w = LinearRegression(fit_intercept=False).fit(self.X, self.y).coef_
         return self.w
 
     def predict(self, params, X=None):
@@ -66,9 +69,12 @@ class RegressionModel(LinearModel):
         return X @ params
 
     def loglikelihood(self, params):
-        # There we assume that y ~ N(wx,1)
+        # There we assume that y ~ N(y|wx,1)
         # And we don't consider last term with (2 * pi * sigma^2)^(-m/2)
-        return -0.5 * np.sum((self.y - self.X @ params)**2)
+        return np.linalg.norm(self.y - self.X @ params)**2 / (-2 * self.y.size)
+    
+    def loss(self, params):
+        return np.linalg.norm(self.y - self.X @ params)**2 / self.y.size
     
     def loglikelihood_fixed(self, params):
         return self.loglikelihood(params) + self.prior.logpdf(params)
