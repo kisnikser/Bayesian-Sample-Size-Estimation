@@ -1,6 +1,6 @@
-\usepackage[T2A]{fontenc}
+%\usepackage[T2A]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[english,russian]{babel}
+\usepackage[russian]{babel}
 \usepackage{graphicx, epsfig}
 \usepackage{amsmath,mathrsfs,amsfonts,amssymb}
 \usepackage{floatflt}
@@ -19,6 +19,11 @@
 \usetheme{default}%{Singapore}%{Warsaw}%{Warsaw}%{Darmstadt}
 \usecolortheme{default}
 
+% Теоремы
+\newtheorem{rustheorem}{Теорема}
+\newtheorem{russtatement}{Утверждение}
+\newtheorem{rusdefinition}{Определение}
+
 %\setbeamerfont{title}{size=\Huge}
 \setbeamertemplate{footline}[page number]{}
 
@@ -32,8 +37,8 @@
 %\setbeamerfont{title}{size=\HUGE}
 \beamertemplatenavigationsymbolsempty
 
-\input{newcommands.tex}
-\input{title.tex}
+\input{paper/newcommands}
+\input{slides/title}
 
 \usepackage{tikz}
 \usetikzlibrary{arrows,shapes,positioning,shadows,trees}
