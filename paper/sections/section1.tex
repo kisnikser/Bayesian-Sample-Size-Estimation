@@ -9,7 +9,7 @@
 %Для обобщенной линейной модели $\mathbb{W} = \mathbb{R}^n$.
 
 Определим функцию правдоподобия и логарифмическую функцию правдоподобия выборки $\mathfrak{D}_m$:
-\[ L(\mathfrak{D}_m, \mathbf{w}) = \prod_{i=1}^{m} p(y_i | \mathbf{x}_i, \mathbf{w}), \qquad l(\mathfrak{D}_m, \mathbf{w}) = \sum\limits_{i=1}^{m} \log p(y_i | \mathbf{x}_i, \mathbf{w}). \]
+\[ L(\mathfrak{D}_m, \mathbf{w}) = p(\by | \bX, \bw) = \prod_{i=1}^{m} p(y_i | \mathbf{x}_i, \mathbf{w}), \qquad l(\mathfrak{D}_m, \mathbf{w}) = \sum\limits_{i=1}^{m} \log p(y_i | \mathbf{x}_i, \mathbf{w}). \]
 
 Оценим параметры, используя метод максимума правдоподобия:
 \[ \hat{\mathbf{w}}_{m} = \arg\max_{\mathbf{w}} L(\mathfrak{D}_m, \mathbf{w}). \]

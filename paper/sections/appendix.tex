@@ -1,0 +1,27 @@
+\section{Приложение}
+
+\begin{proof}[Доказательство (Лемма \ref{lemma1})]
+    Рассмотрим определение M-достаточного размера выборки в терминах логарифма функции правдоподобия. В модели линейной регрессии
+    \[ L\left( \mathfrak{D}_m, \hat{\bw}_k \right) = p(\by | \bX, \hat{\bw}_k) = \prod_{i=1}^{m} p(y_i | \bx_i, \hat{\bw}_k) = \prod_{i=1}^{m} \mathcal{N}\left( y_i | \hat{\bw}_k\T \bx_i, \sigma^2 \right) = \]
+    \[ = \left( 2\pi\sigma^2 \right)^{-m/2} \exp\left( -\dfrac{1}{2\sigma^2} \| \by - \bX \hat{\bw}_k \|_2^2 \right). \]
+    Прологарифмируем:
+    \[ l\left( \mathfrak{D}_m, \hat{\bw}_k \right) = \log p(\by | \bX, \hat{\bw}_k) = -\dfrac{m}{2}\log\left( 2\pi\sigma^2 \right) - \dfrac{1}{2\sigma^2} \| \by - \bX \hat{\bw}_k \|_2^2. \]
+    Возьмем математическое ожидание по $\mathfrak{D}_k$, учитывая, что $\mathbb{E}_{\mathfrak{D}_k}\hat{\bw}_k = \bm_k$ и $\text{cov}(\hat{\bw}_k) = \bSigma_k$:
+    \[ \mathbb{E}_{\mathfrak{D}_k} l\left( \mathfrak{D}_m, \hat{\bw}_k \right) = -\dfrac{m}{2}\log\left( 2\pi\sigma^2 \right) - \dfrac{1}{2\sigma^2} \Big( \| \by - \bX \bm_k \|_2^2 + \text{tr}\left( \bX\T\bX \bSigma_k \right) \Big). \]
+    Запишем выражение для разности математических ожиданий:
+    \[ \mathbb{E}_{\mathfrak{D}_{k+1}} l(\mathfrak{D}_m, \hat{\mathbf{w}}_{k+1}) - \mathbb{E}_{\mathfrak{D}_k} l(\mathfrak{D}_m, \hat{\mathbf{w}}_{k}) = \]
+    \[ = \dfrac{1}{2\sigma^2} \Big( \| \by - \bX \bm_k \|_2^2 - \| \by - \bX \bm_{k+1} \|_2^2 \Big) + \dfrac{1}{2\sigma^2} \text{tr} \Big( \bX\T\bX \left( \bSigma_k - \bSigma_{k+1} \Big) \right) = \]
+    \[ = \dfrac{1}{2\sigma^2} \Big( 2 \by\T \bX (\bm_{k+1} - \bm_k) + (\bm_k - \bm_{k+1})\T \bX\T\bX (\bm_k + \bm_{k+1}) \Big) + \]
+    \[ + \dfrac{1}{2\sigma^2} \text{tr} \Big( \bX\T\bX \left( \bSigma_k - \bSigma_{k+1} \right) \Big). \]
+    Значение функции $M(k)$ есть модуль от вышеприведенного выражения. Применим неравенство треугольника для модуля, а затем оценим каждое слагаемое.\\
+    Первое слагаемое оценим, используя неравенство Коши-Буняковского:
+    \[ \big| \by\T\bX(\bm_{k+1}-\bm_k) \big| \leqslant \| \bX\T\by \|_2 \|\bm_{k+1} - \bm_k\|_2. \]
+    Второе слагаемое оценим, используя неравенство Коши-Буняковского, свойство согласованности спектральной матричной нормы, а также ограниченность последовательности векторов $\bm_k$, которая следует из предъявленной в условии сходимости:
+    \[ \big| (\bm_k - \bm_{k+1})\T \bX\T\bX (\bm_k + \bm_{k+1}) \big| \leqslant \| \bX (\bm_k - \bm_{k+1}) \|_2 \| \bX (\bm_k + \bm_{k+1}) \|_2 \leqslant \]
+    \[ \leqslant \| \bX \|_2^2 \| \bm_k - \bm_{k+1} \|_2 \| \bm_k + \bm_{k+1} \|_2 \leqslant C \| \bX \|_2^2 \| \bm_k - \bm_{k+1} \|_2. \]
+    Последнее слагаемое оценим, используя суб-мультипликативность нормы Фробениуса:
+    \[ \Big| \text{tr} \Big( \bX\T\bX \left( \bSigma_k - \bSigma_{k+1} \right) \Big) \Big| \leqslant \| \bX\T\bX \|_F \| \bSigma_k - \bSigma_{k+1} \|_F. \]
+    Наконец, из приведенных в условии сходимостей следует, что $\| \bm_k - \bm_{k+1} \|_2 \to 0$ и $\| \bSigma_k - \bSigma_{k+1} \|_{F} \to 0$ при $k \to \infty$. Таким образом, $M(k) \to 0$ при $k \to \infty$, что доказывает лемму.
+    
+    
+\end{proof}
