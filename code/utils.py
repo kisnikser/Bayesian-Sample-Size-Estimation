@@ -32,18 +32,20 @@ class Dataset(object):
         else:
             indexes = np.random.permutation(self.m)[:m]
         
-        X_m = self.X[indexes, :]
+        #X_m = self.X[indexes, :]
+        X_m = self.X.loc[indexes]
         y_m = self.y[indexes]
 
         while ((y_m == 0).sum() > m-2 or (y_m == 1).sum() > m-2):
 
             if duplications:
-                indexes = np.random.randint(low = 0, high=self.m, size = m)
+                indexes = np.random.randint(low=0, high=self.m, size=m)
             else:
                 indexes = np.random.permutation(self.m)[:m]
         
-            X_m = self._X[indexes, :]
-            y_m = self._y[indexes]
+            #X_m = self.X[indexes, :]
+            X_m = self.X.loc[indexes]
+            y_m = self.y[indexes]
 
         return X_m, y_m
 
