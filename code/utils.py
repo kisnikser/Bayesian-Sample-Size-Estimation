@@ -2,12 +2,16 @@ import numpy as np
 
 class Dataset(object):
 
-    def __init__(self, X, y):
+    def __init__(self, X, y, task='regression'):
         """
         Constructor method
         """
         self.X = X
         self.y = y
+        self.task = task
+
+        if task == 'classification':
+            self.labels = np.unique(self.y)
 
         self.m = self.y.shape[0]
         self.n = self.X.shape[1]
@@ -27,25 +31,28 @@ class Dataset(object):
             raise ValueError(
                 "The m={} value must be greater than number of feature={}".format(m, self.n))
         
+        if self.task == 'classification' and m <= len(self.labels):
+            raise ValueError(
+                "The m={} value must be greater than number of classes={}".format(m, len(self.labels)))
+        
         if duplications:
             indexes = np.random.randint(low = 0, high=self.m, size=m)
         else:
             indexes = np.random.permutation(self.m)[:m]
         
-        #X_m = self.X[indexes, :]
+        #X_m = self.X[indexes, :] - это если np.array
         X_m = self.X.loc[indexes]
         y_m = self.y[indexes]
 
-        while ((y_m == 0).sum() > m-2 or (y_m == 1).sum() > m-2):
-
-            if duplications:
-                indexes = np.random.randint(low=0, high=self.m, size=m)
-            else:
-                indexes = np.random.permutation(self.m)[:m]
-        
-            #X_m = self.X[indexes, :]
-            X_m = self.X.loc[indexes]
-            y_m = self.y[indexes]
+        if self.task == 'classification':
+            while True:
+                #X_m = self.X[indexes, :]
+                X_m = self.X.loc[indexes]
+                y_m = self.y[indexes]
+                if len(np.unique(y_m)) < len(self.labels):
+                    indexes = np.random.randint(low=0, high=self.m, size=m)
+                else:
+                    break
 
         return X_m, y_m
 
