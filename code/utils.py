@@ -40,8 +40,11 @@ class Dataset(object):
         else:
             indexes = np.random.permutation(self.m)[:m]
         
-        #X_m = self.X[indexes, :] - это если np.array
-        X_m = self.X.loc[indexes]
+        
+        if isinstance(self.X, np.ndarray):
+            X_m = self.X[indexes, :] # - это если np.array
+        else:
+            X_m = self.X.loc[indexes]
         y_m = self.y[indexes]
 
         if self.task == 'classification':

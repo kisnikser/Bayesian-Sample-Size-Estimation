@@ -127,11 +127,12 @@ class Chromosome:
             fitness = 0
             for name in datasets.keys():
                 X = datasets[name]['sample_sizes']
-                x_vals = X / min(X)
-                x_vals /= max(x_vals)
-                y = datasets[name]['mean']
-                y_vals = y / min(y)
-                y_vals /= max(y_vals)
+                x_vals = X - min(X)
+                x_vals = x_vals / max(x_vals)
+                #y = datasets[name]['mean']
+                y = datasets[name]['std']
+                y_vals = y - min(y)
+                y_vals = y_vals / max(y_vals)
                 w_0 = np.zeros(len(self.gen))
                 #print(w_0.size)
                 problem = minimize(lambda w: np.array([(self.evaluate(x_vals[i], w) - y_vals[i])**2 for i in range(len(x_vals))]).mean(), w_0)
