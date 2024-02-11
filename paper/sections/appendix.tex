@@ -1,6 +1,6 @@
-\section{Приложение}
+\section{Приложение}\label{append}
 
-\begin{proof}[Доказательство (Лемма \ref{lemma1})]
+\begin{proof}[Доказательство (Теорема \ref{theorem1})]
     Рассмотрим определение M-достаточного размера выборки в терминах логарифма функции правдоподобия. В модели линейной регрессии
     \[ L\left( \mathfrak{D}_m, \hat{\bw}_k \right) = p(\by | \bX, \hat{\bw}_k) = \prod_{i=1}^{m} p(y_i | \bx_i, \hat{\bw}_k) = \prod_{i=1}^{m} \mathcal{N}\left( y_i | \hat{\bw}_k\T \bx_i, \sigma^2 \right) = \]
     \[ = \left( 2\pi\sigma^2 \right)^{-m/2} \exp\left( -\dfrac{1}{2\sigma^2} \| \by - \bX \hat{\bw}_k \|_2^2 \right). \]
@@ -21,7 +21,27 @@
     \[ \leqslant \| \bX \|_2^2 \| \bm_k - \bm_{k+1} \|_2 \| \bm_k + \bm_{k+1} \|_2 \leqslant C \| \bX \|_2^2 \| \bm_k - \bm_{k+1} \|_2. \]
     Последнее слагаемое оценим, используя суб-мультипликативность нормы Фробениуса:
     \[ \Big| \text{tr} \Big( \bX\T\bX \left( \bSigma_k - \bSigma_{k+1} \right) \Big) \Big| \leqslant \| \bX\T\bX \|_F \| \bSigma_k - \bSigma_{k+1} \|_F. \]
-    Наконец, из приведенных в условии сходимостей следует, что $\| \bm_k - \bm_{k+1} \|_2 \to 0$ и $\| \bSigma_k - \bSigma_{k+1} \|_{F} \to 0$ при $k \to \infty$. Таким образом, $M(k) \to 0$ при $k \to \infty$, что доказывает лемму.
-    
-    
+    Наконец, поскольку $\| \bm_k - \bm_{k+1} \|_2 \to 0$ и $\| \bSigma_k - \bSigma_{k+1} \|_{F} \to 0$ при $k \to \infty$, то $M(k) \to 0$ при $k \to \infty$, что доказывает теорему.
+\end{proof}
+
+\begin{proof}[Доказательство (Следствие)]
+    Из приведенных в условии сходимостей следует, что $\| \bm_k - \bm_{k+1} \|_2 \to 0$ и $\| \bSigma_k - \bSigma_{k+1} \|_{F} \to 0$ при $k \to \infty$. Применение Теоремы \ref{theorem1} заканчивает доказательство.
+\end{proof}
+
+\begin{proof}[Доказательство (Теорема \ref{theorem2})]
+    Дивергенция Кульбака-Лейблера для пары нормальных апостериорных распределений имеет вид
+    \[ D_{\text{KL}}\left( p_k \| p_{k+1} \right) = \dfrac{1}{2} \left( \mathrm{tr}\left( \mathbf{\Sigma}_{k+1}^{-1} \mathbf{\Sigma}_k \right) + (\mathbf{m}_{k+1} - \mathbf{m}_k)^\top \mathbf{\Sigma}_{k+1}^{-1} (\mathbf{m}_{k+1} - \mathbf{m}_k) - n + \log{\left( \dfrac{\det \mathbf{\Sigma}_{k+1}}{\det \mathbf{\Sigma}_{k}} \right)} \right). \]
+    Представим $\bSigma_{k+1}$ как $\bSigma_{k+1} = \bSigma_k + \Delta \bSigma$. Рассмотрим в отдельности каждое слагаемое.
+    \[ \mathrm{tr}\left( \mathbf{\Sigma}_{k+1}^{-1} \mathbf{\Sigma}_k \right) = \mathrm{tr}\left( \left( \mathbf{\Sigma}_k + \Delta \bSigma \right)^{-1} \mathbf{\Sigma}_k \right) \to \mathrm{tr} \mathbf{I}_n= n \text{ при } \| \Delta \bSigma \|_F \to 0, \]
+    \[ \left| (\mathbf{m}_{k+1} - \mathbf{m}_k)^\top \mathbf{\Sigma}_{k+1}^{-1} (\mathbf{m}_{k+1} - \mathbf{m}_k) \right| \leqslant \| \mathbf{m}_{k+1} - \mathbf{m}_k \|_2^2 \| \mathbf{\Sigma}_{k+1}^{-1} \|_2 \to 0 \text{ при } \| \mathbf{m}_{k+1} - \mathbf{m}_k \|_2 \to 0, \]
+    \[ \log{\left( \dfrac{\det \mathbf{\Sigma}_{k+1}}{\det \mathbf{\Sigma}_{k}} \right)} = \log{\left( \dfrac{\det \left( \mathbf{\Sigma}_k + \Delta \bSigma \right)}{\det \mathbf{\Sigma}_{k}} \right)} \to \log \det \mathbf{I}_n = \log 1 = 0 \text{ при } \| \Delta \bSigma \|_F \to 0, \]
+    откуда и имеем требуемое.
+\end{proof}
+
+\begin{proof}[Доказательство (Теорема \ref{theorem3})]
+    Воспользуемся выражением s-score для пары нормальных априорных распределений из [Адуенко]:
+    \[ \text{s-score}(p_k, p_{k+1}) = \exp{\left( -\dfrac{1}{2} (\mathbf{m}_{k+1} - \mathbf{m}_k)^\top \left( \mathbf{\Sigma}_k + \mathbf{\Sigma}_{k+1} \right)^{-1} (\mathbf{m}_{k+1} - \mathbf{m}_k) \right)}. \]
+    Поскольку
+    \[ \left| (\mathbf{m}_{k+1} - \mathbf{m}_k)^\top \left( \mathbf{\Sigma}_k + \mathbf{\Sigma}_{k+1} \right)^{-1} (\mathbf{m}_{k+1} - \mathbf{m}_k) \right| \leqslant \| \mathbf{m}_{k+1} - \mathbf{m}_k \|_2^2 \| \left( \mathbf{\Sigma}_k + \mathbf{\Sigma}_{k+1} \right)^{-1} \|_2 \to 0 \]
+    при $\| \mathbf{m}_{k+1} - \mathbf{m}_k \|_2 \to 0$, то значение квадратичной формы внутри экспоненты стремится к нулю. Следовательно, $\text{s-score}(p_k, p_{k+1}) \to 1$ при $\| \mathbf{m}_{k+1} - \mathbf{m}_k \|_2 \to 0$.
 \end{proof}
