@@ -19,7 +19,7 @@
     Второе слагаемое оценим, используя неравенство Коши-Буняковского, свойство согласованности спектральной матричной нормы, а также ограниченность последовательности векторов $\bm_k$, которая следует из предъявленной в условии сходимости:
     \[ \big| (\bm_k - \bm_{k+1})\T \bX\T\bX (\bm_k + \bm_{k+1}) \big| \leqslant \| \bX (\bm_k - \bm_{k+1}) \|_2 \| \bX (\bm_k + \bm_{k+1}) \|_2 \leqslant \]
     \[ \leqslant \| \bX \|_2^2 \| \bm_k - \bm_{k+1} \|_2 \| \bm_k + \bm_{k+1} \|_2 \leqslant C \| \bX \|_2^2 \| \bm_k - \bm_{k+1} \|_2. \]
-    Последнее слагаемое оценим, используя суб-мультипликативность нормы Фробениуса:
+    Последнее слагаемое оценим, используя неравенство Гельдера для нормы Фробениуса:
     \[ \Big| \text{tr} \Big( \bX\T\bX \left( \bSigma_k - \bSigma_{k+1} \right) \Big) \Big| \leqslant \| \bX\T\bX \|_F \| \bSigma_k - \bSigma_{k+1} \|_F. \]
     Наконец, поскольку $\| \bm_k - \bm_{k+1} \|_2 \to 0$ и $\| \bSigma_k - \bSigma_{k+1} \|_{F} \to 0$ при $k \to \infty$, то $M(k) \to 0$ при $k \to \infty$, что доказывает теорему.
 \end{proof}
@@ -30,18 +30,44 @@
 
 \begin{proof}[Доказательство (Теорема \ref{theorem2})]
     Дивергенция Кульбака-Лейблера для пары нормальных апостериорных распределений имеет вид
-    \[ D_{\text{KL}}\left( p_k \| p_{k+1} \right) = \dfrac{1}{2} \left( \mathrm{tr}\left( \mathbf{\Sigma}_{k+1}^{-1} \mathbf{\Sigma}_k \right) + (\mathbf{m}_{k+1} - \mathbf{m}_k)^\top \mathbf{\Sigma}_{k+1}^{-1} (\mathbf{m}_{k+1} - \mathbf{m}_k) - n + \log{\left( \dfrac{\det \mathbf{\Sigma}_{k+1}}{\det \mathbf{\Sigma}_{k}} \right)} \right). \]
+    \[ D_{\text{KL}}\left( p_k \| p_{k+1} \right) = \dfrac{1}{2} \left( \mathrm{tr}\left( \mathbf{\Sigma}_{k+1}^{-1} \mathbf{\Sigma}_k \right) + (\mathbf{m}_{k+1} - \mathbf{m}_k)\T \mathbf{\Sigma}_{k+1}^{-1} (\mathbf{m}_{k+1} - \mathbf{m}_k) - n + \log{\left( \dfrac{\det \mathbf{\Sigma}_{k+1}}{\det \mathbf{\Sigma}_{k}} \right)} \right). \]
     Представим $\bSigma_{k+1}$ как $\bSigma_{k+1} = \bSigma_k + \Delta \bSigma$. Рассмотрим в отдельности каждое слагаемое.
     \[ \mathrm{tr}\left( \mathbf{\Sigma}_{k+1}^{-1} \mathbf{\Sigma}_k \right) = \mathrm{tr}\left( \left( \mathbf{\Sigma}_k + \Delta \bSigma \right)^{-1} \mathbf{\Sigma}_k \right) \to \mathrm{tr} \mathbf{I}_n= n \text{ при } \| \Delta \bSigma \|_F \to 0, \]
-    \[ \left| (\mathbf{m}_{k+1} - \mathbf{m}_k)^\top \mathbf{\Sigma}_{k+1}^{-1} (\mathbf{m}_{k+1} - \mathbf{m}_k) \right| \leqslant \| \mathbf{m}_{k+1} - \mathbf{m}_k \|_2^2 \| \mathbf{\Sigma}_{k+1}^{-1} \|_2 \to 0 \text{ при } \| \mathbf{m}_{k+1} - \mathbf{m}_k \|_2 \to 0, \]
+    \[ \left| (\mathbf{m}_{k+1} - \mathbf{m}_k)\T \mathbf{\Sigma}_{k+1}^{-1} (\mathbf{m}_{k+1} - \mathbf{m}_k) \right| \leqslant \| \mathbf{m}_{k+1} - \mathbf{m}_k \|_2^2 \| \mathbf{\Sigma}_{k+1}^{-1} \|_2 \to 0 \text{ при } \| \mathbf{m}_{k+1} - \mathbf{m}_k \|_2 \to 0, \]
     \[ \log{\left( \dfrac{\det \mathbf{\Sigma}_{k+1}}{\det \mathbf{\Sigma}_{k}} \right)} = \log{\left( \dfrac{\det \left( \mathbf{\Sigma}_k + \Delta \bSigma \right)}{\det \mathbf{\Sigma}_{k}} \right)} \to \log \det \mathbf{I}_n = \log 1 = 0 \text{ при } \| \Delta \bSigma \|_F \to 0, \]
     откуда и имеем требуемое.
 \end{proof}
 
 \begin{proof}[Доказательство (Теорема \ref{theorem3})]
     Воспользуемся выражением s-score для пары нормальных априорных распределений из [Адуенко]:
-    \[ \text{s-score}(p_k, p_{k+1}) = \exp{\left( -\dfrac{1}{2} (\mathbf{m}_{k+1} - \mathbf{m}_k)^\top \left( \mathbf{\Sigma}_k + \mathbf{\Sigma}_{k+1} \right)^{-1} (\mathbf{m}_{k+1} - \mathbf{m}_k) \right)}. \]
+    \[ \text{s-score}(p_k, p_{k+1}) = \exp{\left( -\dfrac{1}{2} (\mathbf{m}_{k+1} - \mathbf{m}_k)\T \left( \mathbf{\Sigma}_k + \mathbf{\Sigma}_{k+1} \right)^{-1} (\mathbf{m}_{k+1} - \mathbf{m}_k) \right)}. \]
     Поскольку
-    \[ \left| (\mathbf{m}_{k+1} - \mathbf{m}_k)^\top \left( \mathbf{\Sigma}_k + \mathbf{\Sigma}_{k+1} \right)^{-1} (\mathbf{m}_{k+1} - \mathbf{m}_k) \right| \leqslant \| \mathbf{m}_{k+1} - \mathbf{m}_k \|_2^2 \| \left( \mathbf{\Sigma}_k + \mathbf{\Sigma}_{k+1} \right)^{-1} \|_2 \to 0 \]
+    \[ \left| (\mathbf{m}_{k+1} - \mathbf{m}_k)\T \left( \mathbf{\Sigma}_k + \mathbf{\Sigma}_{k+1} \right)^{-1} (\mathbf{m}_{k+1} - \mathbf{m}_k) \right| \leqslant \| \mathbf{m}_{k+1} - \mathbf{m}_k \|_2^2 \| \left( \mathbf{\Sigma}_k + \mathbf{\Sigma}_{k+1} \right)^{-1} \|_2 \to 0 \]
     при $\| \mathbf{m}_{k+1} - \mathbf{m}_k \|_2 \to 0$, то значение квадратичной формы внутри экспоненты стремится к нулю. Следовательно, $\text{s-score}(p_k, p_{k+1}) \to 1$ при $\| \mathbf{m}_{k+1} - \mathbf{m}_k \|_2 \to 0$.
+\end{proof}
+
+\begin{proof}[Доказательство (Теорема \ref{theorem4})]
+    Пусть задано нормальное априорное распределение параметров $p(\bw) = \mathcal{N}\left( \bw | \mathbf{0}, \tau^{-1} \bI \right)$. В модели линейной регрессии правдоподобие является нормальным, а именно
+    \[ p(\by | \bX, \bw) = \mathcal{N}\left( \by | \bX \bw, \sigma^2 \mathbf{I} \right) = \left( 2\pi\sigma^2 \right)^{-m/2} \exp\left( -\dfrac{1}{2\sigma^2} \| \by - \bX \bw \|_2^2 \right). \]
+    Используя сопряженность априорного распределения и правдоподобия, легко найти параметры апостериорного распределения:
+    \[ p(\bw | \bX, \by) = \mathcal{N}\left( \bw | \bm, \bSigma \right), \]
+    где
+    \[ \bSigma = \left( \tau \bI + \dfrac{1}{\sigma^2} \bX\T \bX \right)^{-1}, \qquad \bm = \left( \bX\T \bX + \tau \sigma^2 \bI \right)^{-1} \bX\T \by. \]
+    Рассмотрим выражение $\| \bSigma_{k+1} - \bSigma_k \|_2$ нормы разности матриц ковариции для подвыборок размера $k$ и $k+1$. Введем обозначение $\bA_k = \dfrac{1}{\sigma^2} \bX\T_k \bX_k$. Учитывая формулы выше, имеем
+    \[ \| \bSigma_{k+1} - \bSigma_k \|_2 = \left\| \left( \tau \bI + \bA_{k+1} \right)^{-1} - \left( \tau \bI + \bA_k \right)^{-1} \right\|_2 = \]
+    \[ = \left\| \left( \tau \bI + \bA_{k+1} \right)^{-1} \left( \bA_{k+1} - \bA_k \right) \left( \tau \bI + \bA_k \right)^{-1} \right\|_2 \leqslant \]
+    Воспользуемся субмультипликативностью спектральной матричной нормыж
+    \[ \leqslant \left\| \left( \tau \bI + \bA_{k+1} \right)^{-1} \right\|_2 \left\| \left( \tau \bI + \bA_k \right)^{-1} \right\|_2 \left\| \bA_{k+1} - \bA_k \right\|_2 = \]
+    Теперь воспользуемся выражением спектральной матричной нормы через максимальное собственное значение.
+    \[ = \dfrac{1}{\lambda_{\min}\left( \tau \bI + \bA_{k+1} \right)} \dfrac{1}{\lambda_{\min}\left( \tau \bI + \bA_k \right)} \left\| \bA_{k+1} - \bA_k \right\|_2 \leqslant \]
+    \[ \leqslant \dfrac{1}{\lambda_{\min}\left( \bA_{k+1} \right)} \dfrac{1}{\lambda_{\min}\left( \bA_k \right)} \left\| \bA_{k+1} - \bA_k \right\|_2 = \]
+    \[ = \sigma^2  \dfrac{1}{\lambda_{\min}\left( \bX\T_{k+1} \bX_{k+1} \right)} \dfrac{1}{\lambda_{\min}\left( \bX\T_k \bX_k \right)} \left\| \bX\T_{k+1} \bX_{k+1} - \bX\T_k \bX_k \right\|_2. \]
+    Поскольку по условию $\lambda_{\min}\left( \bX\T_k \bX_k \right) = \Omega(1)$ при $k \to \infty$, то произведение дробей в выражении выше ограничено константой, начиная с некоторого номера. Так как, кроме того, $\left\| \bX\T_{k+1} \bX_{k+1} - \bX\T_k \bX_k \right\|_2 = o(k^{-1/2})$ при $k \to \infty$, то и $\| \bSigma_{k+1} - \bSigma_k \|_2 = o(k^{-1/2})$ при $k \to \infty$. Далее воспользуемся эквивалентностью матричных норм, а именно
+    \[ \| \bSigma_{k+1} - \bSigma_k \|_F \leqslant \sqrt{k} \| \bSigma_{k+1} - \bSigma_k \|_2 = o(1) \text{ при } k \to \infty, \]
+    что и требовалось доказать.
+\end{proof}
+
+\begin{proof}[Доказательство (Теорема \ref{theorem5})]
+    В обозначениях предыдущей теоремы имеем
+    \[ \| \bm_{k+1} - \bm_k \|_2 = \left\| \left( \bX\T_{k+1} \bX_{k+1} + \tau \sigma^2 \bI \right)^{-1} \bX\T_{k+1} \by_{k+1} - \left( \bX\T_k \bX_k + \tau \sigma^2 \bI \right)^{-1} \bX\T_k \by_k \right\|_2 \leqslant \]
 \end{proof}
