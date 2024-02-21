@@ -2,18 +2,25 @@
 
 Объектом называется пара $(\bx, y)$, где $\bx \in \mathbb{X} \subseteq \mathbb{R}^n$ есть вектор признакового описания объекта, а $y \in \mathbb{Y}$ есть значение целевой переменной. В задаче регрессии $\mathbb{Y} = \mathbb{R}$, а в задаче $K$-классовой классификации $\mathbb{Y} = \{1, \ldots, K\}$.
 
-Матрицей объекты-признаки для выборки $\mathfrak{D}_m = \left\{ (\bx_i, y_i) \right\}, i \in \mathcal{I} = \{ 1, \ldots, m \}$ размера $m$ называется матрица $\bX = \left[ \bx_1, \ldots, \bx_m \right]\T \in \mathbb{R}^{m \times n}$.
+Матрицей объекты-признаки для выборки $\mathfrak{D}_m = \left\{ (\bx_i, y_i) \right\}, i \in \mathcal{I} = \{ 1, \ldots, m \}$ размера $m$ называется матрица $\bX_m = \left[ \bx_1, \ldots, \bx_m \right]\T \in \mathbb{R}^{m \times n}$.
 
-Вектором ответов (вектором значений целевой переменной) для выборки $\mathfrak{D}_m = \left\{ (\bx_i, y_i) \right\}, i \in \mathcal{I} = \{ 1, \ldots, m \}$ размера $m$ называется вектор $\by = \left[ y_1, \ldots, y_m \right]\T \in \mathbb{Y}^m$.
+Вектором ответов (вектором значений целевой переменной) для выборки $\mathfrak{D}_m = \left\{ (\bx_i, y_i) \right\}, i \in \mathcal{I} = \{ 1, \ldots, m \}$ размера $m$ называется вектор $\by_m = \left[ y_1, \ldots, y_m \right]\T \in \mathbb{Y}^m$.
 
-Моделью называется параметрическое семейство функций $f$, отображающих декартово произведение множества значений признакового описания объектов $\mathbb{X}$ и множества значений параметров $\mathbb{W}$ во множество значений целевой переменной $\mathbb{Y}$: $$f: \mathbb{X} \times \mathbb{W} \to \mathbb{Y}.$$
+Моделью называется параметрическое семейство функций $f$, отображающих декартово произведение множества значений признакового описания объектов $\mathbb{X}$ и множества значений параметров $\mathbb{W}$ во множество значений целевой переменной $\mathbb{Y}$: 
+\[ f: \mathbb{X} \times \mathbb{W} \to \mathbb{Y}. \]
 
-Вероятностной моделью называется совместное распределение вида $$p(y, \bw | \bx) = p(y | \bx, \bw) p(\bw): \mathbb{Y} \times \mathbb{W} \times \mathbb{X} \to \mathbb{R}^+,$$
+Вероятностной моделью называется совместное распределение вида 
+\[ p(y, \bw | \bx) = p(y | \bx, \bw) p(\bw): \mathbb{Y} \times \mathbb{W} \times \mathbb{X} \to \mathbb{R}^+, \]
 где $\bw \in \mathbb{W}$ есть набор параметров модели, $p(y | \bx, \bw)$ задает правдоподобие объекта, а $p(\bw)$ задает априорное распределение параметров.
 
-Функцией правдоподобия простой выборки $\mathfrak{D}_m = \left\{ (\bx_i, y_i) \right\}, i \in \mathcal{I} = \{ 1, \ldots, m \}$ размера $m$ называется функция $$L(\mathfrak{D}_m, \mathbf{w}) = p(\by | \bX, \bw) = \prod_{i=1}^{m} p(y_i | \mathbf{x}_i, \mathbf{w}).$$ Ее логарифм $$l(\mathfrak{D}_m, \mathbf{w}) = \sum\limits_{i=1}^{m} \log p(y_i | \mathbf{x}_i, \mathbf{w})$$ называется логарифмической функцией правдоподобия. Далее, если не оговорено противное, будем считать выборку простой.
+Функцией правдоподобия простой выборки $\mathfrak{D}_m = \left\{ (\bx_i, y_i) \right\}, i \in \mathcal{I} = \{ 1, \ldots, m \}$ размера $m$ называется функция 
+\[ L(\mathfrak{D}_m, \mathbf{w}) = p(\by_m | \bX_m, \bw) = \prod_{i=1}^{m} p(y_i | \mathbf{x}_i, \mathbf{w}). \]
+Ее логарифм 
+\[ l(\mathfrak{D}_m, \mathbf{w}) = \sum\limits_{i=1}^{m} \log p(y_i | \mathbf{x}_i, \mathbf{w}) \]
+называется логарифмической функцией правдоподобия. Далее, если не оговорено противное, будем считать выборку простой.
 
-Оценкой максимума правдоподобия набора параметров $\bw \in \mathbb{W}$ по выборке $\mathfrak{D}_m = \left\{ (\bx_i, y_i) \right\}, i \in \mathcal{I} = \{ 1, \ldots, m \}$ размера $m$ называется $$\hat{\mathbf{w}}_{m} = \argmax_{\bw \in \mathbb{W}} L(\mathfrak{D}_m, \mathbf{w}).$$
+Оценкой максимума правдоподобия набора параметров $\bw \in \mathbb{W}$ по выборке $\mathfrak{D}_m = \left\{ (\bx_i, y_i) \right\}, i \in \mathcal{I} = \{ 1, \ldots, m \}$ размера $m$ называется 
+\[ \hat{\mathbf{w}}_{m} = \argmax_{\bw \in \mathbb{W}} L(\mathfrak{D}_m, \mathbf{w}). \]
 
 Ставится задача определения достаточного размера выборки $m^*$. Пусть задан некоторый критерий $T$. Он может быть построен, например, на основе эвристик о поведении параметров модели.
 \begin{definition}

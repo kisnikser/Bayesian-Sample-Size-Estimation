@@ -47,27 +47,26 @@
 \end{proof}
 
 \begin{proof}[Доказательство (Теорема \ref{theorem4})]
-    Пусть задано нормальное априорное распределение параметров $p(\bw) = \mathcal{N}\left( \bw | \mathbf{0}, \tau^{-1} \bI \right)$. В модели линейной регрессии правдоподобие является нормальным, а именно
+    Пусть задано нормальное априорное распределение параметров $p(\bw) = \mathcal{N}\left( \bw | \mathbf{0}, \alpha^{-1} \bI \right)$. В модели линейной регрессии правдоподобие является нормальным, а именно
     \[ p(\by | \bX, \bw) = \mathcal{N}\left( \by | \bX \bw, \sigma^2 \mathbf{I} \right) = \left( 2\pi\sigma^2 \right)^{-m/2} \exp\left( -\dfrac{1}{2\sigma^2} \| \by - \bX \bw \|_2^2 \right). \]
     Используя сопряженность априорного распределения и правдоподобия, легко найти параметры апостериорного распределения:
     \[ p(\bw | \bX, \by) = \mathcal{N}\left( \bw | \bm, \bSigma \right), \]
     где
-    \[ \bSigma = \left( \tau \bI + \dfrac{1}{\sigma^2} \bX\T \bX \right)^{-1}, \qquad \bm = \left( \bX\T \bX + \tau \sigma^2 \bI \right)^{-1} \bX\T \by. \]
+    \[ \bSigma = \left( \alpha \bI + \dfrac{1}{\sigma^2} \bX\T \bX \right)^{-1}, \qquad \bm = \left( \bX\T \bX + \alpha \sigma^2 \bI \right)^{-1} \bX\T \by. \]
     Рассмотрим выражение $\| \bSigma_{k+1} - \bSigma_k \|_2$ нормы разности матриц ковариции для подвыборок размера $k$ и $k+1$. Введем обозначение $\bA_k = \dfrac{1}{\sigma^2} \bX\T_k \bX_k$. Учитывая формулы выше, имеем
-    \[ \| \bSigma_{k+1} - \bSigma_k \|_2 = \left\| \left( \tau \bI + \bA_{k+1} \right)^{-1} - \left( \tau \bI + \bA_k \right)^{-1} \right\|_2 = \]
-    \[ = \left\| \left( \tau \bI + \bA_{k+1} \right)^{-1} \left( \bA_{k+1} - \bA_k \right) \left( \tau \bI + \bA_k \right)^{-1} \right\|_2 \leqslant \]
-    Воспользуемся субмультипликативностью спектральной матричной нормыж
-    \[ \leqslant \left\| \left( \tau \bI + \bA_{k+1} \right)^{-1} \right\|_2 \left\| \left( \tau \bI + \bA_k \right)^{-1} \right\|_2 \left\| \bA_{k+1} - \bA_k \right\|_2 = \]
+    \[ \| \bSigma_{k+1} - \bSigma_k \|_2 = \left\| \left( \alpha \bI + \bA_{k+1} \right)^{-1} - \left( \alpha \bI + \bA_k \right)^{-1} \right\|_2 = \]
+    \[ = \left\| \left( \alpha \bI + \bA_{k+1} \right)^{-1} \left( \bA_{k+1} - \bA_k \right) \left( \alpha \bI + \bA_k \right)^{-1} \right\|_2 \leqslant \]
+    Воспользуемся субмультипликативностью спектральной матричной нормы.
+    \[ \leqslant \left\| \left( \alpha \bI + \bA_{k+1} \right)^{-1} \right\|_2 \left\| \left( \alpha \bI + \bA_k \right)^{-1} \right\|_2 \left\| \bA_{k+1} - \bA_k \right\|_2 = \]
     Теперь воспользуемся выражением спектральной матричной нормы через максимальное собственное значение.
-    \[ = \dfrac{1}{\lambda_{\min}\left( \tau \bI + \bA_{k+1} \right)} \dfrac{1}{\lambda_{\min}\left( \tau \bI + \bA_k \right)} \left\| \bA_{k+1} - \bA_k \right\|_2 \leqslant \]
+    \[ = \dfrac{1}{\lambda_{\min}\left( \alpha \bI + \bA_{k+1} \right)} \dfrac{1}{\lambda_{\min}\left( \alpha \bI + \bA_k \right)} \left\| \bA_{k+1} - \bA_k \right\|_2 \leqslant \]
     \[ \leqslant \dfrac{1}{\lambda_{\min}\left( \bA_{k+1} \right)} \dfrac{1}{\lambda_{\min}\left( \bA_k \right)} \left\| \bA_{k+1} - \bA_k \right\|_2 = \]
     \[ = \sigma^2  \dfrac{1}{\lambda_{\min}\left( \bX\T_{k+1} \bX_{k+1} \right)} \dfrac{1}{\lambda_{\min}\left( \bX\T_k \bX_k \right)} \left\| \bX\T_{k+1} \bX_{k+1} - \bX\T_k \bX_k \right\|_2. \]
-    Поскольку по условию $\lambda_{\min}\left( \bX\T_k \bX_k \right) = \Omega(1)$ при $k \to \infty$, то произведение дробей в выражении выше ограничено константой, начиная с некоторого номера. Так как, кроме того, $\left\| \bX\T_{k+1} \bX_{k+1} - \bX\T_k \bX_k \right\|_2 = o(k^{-1/2})$ при $k \to \infty$, то и $\| \bSigma_{k+1} - \bSigma_k \|_2 = o(k^{-1/2})$ при $k \to \infty$. Далее воспользуемся эквивалентностью матричных норм, а именно
+    Далее, поскольку по условию $\| \bx \|_2 \leqslant M$, то
+    \[ \left\| \bX\T_{k+1} \bX_{k+1} - \bX\T_k \bX_k \right\|_2 = \left\| \sum\limits_{i=1}^{k+1} \bx_i \bx_i\T - \sum\limits_{i=1}^{k} \bx_i \bx_i\T \right\|_2 = \left\| \bx_{k+1} \bx_{k+1}\T \right\|_2 = \lambda_{\max}\left( \bx_{k+1} \bx_{k+1}\T \right) = \]
+    Матрица единичного ранга имеет единственное ненулевое собственное значение.
+    \[ = \bx_{k+1}\T \bx_{k+1} = \| \bx_{k+1} \|_2^2 \leqslant M^2. \]
+    По условию $\lambda_{\min}\left( \bX\T_k \bX_k \right) = \omega(k^{1/4})$, тогда $\| \bSigma_{k+1} - \bSigma_k \|_2 = o(k^{-1/2})$ при $k \to \infty$. Далее воспользуемся эквивалентностью матричных норм, а именно
     \[ \| \bSigma_{k+1} - \bSigma_k \|_F \leqslant \sqrt{k} \| \bSigma_{k+1} - \bSigma_k \|_2 = o(1) \text{ при } k \to \infty, \]
     что и требовалось доказать.
-\end{proof}
-
-\begin{proof}[Доказательство (Теорема \ref{theorem5})]
-    В обозначениях предыдущей теоремы имеем
-    \[ \| \bm_{k+1} - \bm_k \|_2 = \left\| \left( \bX\T_{k+1} \bX_{k+1} + \tau \sigma^2 \bI \right)^{-1} \bX\T_{k+1} \by_{k+1} - \left( \bX\T_k \bX_k + \tau \sigma^2 \bI \right)^{-1} \bX\T_k \by_k \right\|_2 \leqslant \]
 \end{proof}
