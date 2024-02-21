@@ -66,7 +66,35 @@
     \[ \left\| \bX\T_{k+1} \bX_{k+1} - \bX\T_k \bX_k \right\|_2 = \left\| \sum\limits_{i=1}^{k+1} \bx_i \bx_i\T - \sum\limits_{i=1}^{k} \bx_i \bx_i\T \right\|_2 = \left\| \bx_{k+1} \bx_{k+1}\T \right\|_2 = \lambda_{\max}\left( \bx_{k+1} \bx_{k+1}\T \right) = \]
     Матрица единичного ранга имеет единственное ненулевое собственное значение.
     \[ = \bx_{k+1}\T \bx_{k+1} = \| \bx_{k+1} \|_2^2 \leqslant M^2. \]
-    По условию $\lambda_{\min}\left( \bX\T_k \bX_k \right) = \omega(k^{1/4})$, тогда $\| \bSigma_{k+1} - \bSigma_k \|_2 = o(k^{-1/2})$ при $k \to \infty$. Далее воспользуемся эквивалентностью матричных норм, а именно
-    \[ \| \bSigma_{k+1} - \bSigma_k \|_F \leqslant \sqrt{k} \| \bSigma_{k+1} - \bSigma_k \|_2 = o(1) \text{ при } k \to \infty, \]
-    что и требовалось доказать.
+    По условию $\lambda_{\min}\left( \bX\T_k \bX_k \right) = \omega(\sqrt{k})$, тогда $\| \bSigma_{k+1} - \bSigma_k \|_2 = o(k^{-1})$ при $k \to \infty$. Далее воспользуемся эквивалентностью матричных норм, а именно
+    \[ \| \bSigma_{k+1} - \bSigma_k \|_F \leqslant \sqrt{k} \| \bSigma_{k+1} - \bSigma_k \|_2 = o(k^{-1/2}) \text{ при } k \to \infty, \]
+    что и требовалось доказать. Теперь оценим норму разности математических ожиданий.
+    \[ \| \bm_{k+1} - \bm_k \|_2 = \left\| \left( \bX_{k+1}\T \bX_{k+1} + \alpha \sigma^2 \bI \right)^{-1} \bX_{k+1}\T \by_{k+1} - \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1} \bX_k\T \by_k \right\|_2 = \]
+    Учтем, что $\bX_{k+1}\T = [\bX_k\T, \bx_{k+1}]$ и $\by_{k+1} = [\by_k, y_{k+1}]\T$, тогда $\bX_{k+1}\T \bX_{k+1} = \bX_k\T \bX_k + \bx_{k+1} \bx_{k+1}\T$ и $\bX_{k+1}\T \by_{k+1} = \bX_k\T \by_k + \bx_{k+1} y_{k+1}$.
+    \[ = \left\| \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI + \bx_{k+1} \bx_{k+1}\T \right)^{-1} \left( \bX_k\T \by_k + \bx_{k+1} y_{k+1} \right) - \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1} \bX_k\T \by_k \right\|_2 = \]
+    Вынесем множитель в первом слагаемом:
+    \[ \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI + \bx_{k+1} \bx_{k+1}\T \right)^{-1} = \left( \bI + \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1} \bx_{k+1} \bx_{k+1}\T \right)^{-1} \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1}.\]
+    Далее вынесем общий множитель у обоих слагаемых.
+    \begin{multline*}
+        = \Bigg\| \left[ \left( \bI + \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1} \bx_{k+1} \bx_{k+1}\T \right)^{-1} - \bI \right] \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1} \bX_k\T \by_k + \\ + \left( \bX_{k+1}\T \bX_{k+1} + \alpha \sigma^2 \bI \right)^{-1} \bx_{k+1} y_{k+1} \Bigg\|_2 =
+    \end{multline*}
+    Воспользуемся неравенством треугольника, а также свойством согласованности и субмультипликативности спектральной нормы.
+    \begin{multline*}
+        \leqslant \left\| \left( \bI + \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1} \bx_{k+1} \bx_{k+1}\T \right)^{-1} - \bI \right\|_2 \left\| \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1} \right\|_2 \left\| \bX_k\T \by_k \right\|_2 + \\ + \left\| \left( \bX_{k+1}\T \bX_{k+1} + \alpha \sigma^2 \bI \right)^{-1} \right\|_2 \left\| \bx_{k+1} y_{k+1} \right\|_2
+    \end{multline*}
+    Оценим по отдельности каждое слагаемое. В первом множителе первого слагаемого применим формулу для разности обратных матриц, как мы делали с ковариационными матрицами.
+    \[ \left\| \left( \bI + \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1} \bx_{k+1} \bx_{k+1}\T \right)^{-1} - \bI \right\|_2 \leqslant \]
+    \[ \leqslant \left\| \left( \bI + \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1} \bx_{k+1} \bx_{k+1}\T \right)^{-1} \right\|_2 \cdot \left\| \bI \right\|_2 \cdot \left\| \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1} \bx_{k+1} \bx_{k+1}\T \right\|_2 \leqslant \]
+    Снова используем субмультипликативность, а также выражение для нормы матрицы единичного ранга.
+    \[ \leqslant \dfrac{1}{\lambda_{\min}\left( \bI + \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1} \bx_{k+1} \bx_{k+1}\T \right)} \dfrac{\left\| \bx_{k+1} \right\|_2^2}{\lambda_{\min}\left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)} \leqslant \]
+    \[ \leqslant \dfrac{1}{1 + \lambda_{\min}\left(\left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1} \bx_{k+1} \bx_{k+1}\T \right)} \dfrac{M^2}{\lambda_{\min}\left( \bX_k\T \bX_k \right)} \leqslant \]
+    Минимальное собственное значение произведения матриц оценивается произведением их минимальных собственных значений. Кроме того, минимальное собственное значение матрицы единичного ранга $\bx_{k+1} \bx_{k+1}\T$ равно нулю.
+    \[ \leqslant \dfrac{1}{1 + \lambda_{\max}\left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right) \lambda_{\min}\left( \bx_{k+1} \bx_{k+1}\T \right)} \dfrac{1}{\lambda_{\min}\left( \bX_k\T \bX_k \right)} M^2 = \dfrac{M^2}{\lambda_{\min}\left( \bX_k\T \bX_k \right)}. \]
+    Второй и третий множители первого слагаемого оцениваются следующим образом.
+    \[ \left\| \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1} \right\|_2 \left\| \bX_k\T \by_k \right\|_2 \leqslant \dfrac{\left\| \bX_k\T \by_k \right\|_2}{\lambda_{\min}\left( \bX_k\T \bX_k \right)} = \dfrac{\left\| \sum\limits_{i=1}^{k} \bx_i y_i \right\|_2}{\lambda_{\min}\left( \bX_k\T \bX_k \right)} \leqslant \dfrac{k M^2}{\lambda_{\min}\left( \bX_k\T \bX_k \right)} \]
+    Наконец, оценим второе слагаемое.
+    \[ \left\| \left( \bX_{k+1}\T \bX_{k+1} + \alpha \sigma^2 \bI \right)^{-1} \right\|_2 \left\| \bx_{k+1} y_{k+1} \right\|_2 \leqslant \dfrac{M^2}{\lambda_{\min}\left( \bX_{k+1}\T \bX_{k+1} \right)} \]
+    Итого, имеем следующую оценку.
+    \[ \| \bm_{k+1} - \bm_k \|_2 \leqslant \dfrac{k M^3}{\lambda_{\min}^2\left( \bX_k\T \bX_k \right)} + \dfrac{M^2}{\lambda_{\min}\left( \bX_{k+1}\T \bX_{k+1} \right)} = k \cdot o(k^{-1}) + o(k^{-1/2}) = o(1) \text{ при } k \to \infty \]
+    Таким образом, получили требуемую сходимость.
 \end{proof}
