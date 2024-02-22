@@ -39,7 +39,7 @@
 \end{proof}
 
 \begin{proof}[Доказательство (Теорема \ref{theorem3})]
-    Воспользуемся выражением s-score для пары нормальных априорных распределений из [Адуенко]:
+    Воспользуемся выражением s-score для пары нормальных априорных распределений из \cite{Aduenko2017}:
     \[ \text{s-score}(p_k, p_{k+1}) = \exp{\left( -\dfrac{1}{2} (\mathbf{m}_{k+1} - \mathbf{m}_k)\T \left( \mathbf{\Sigma}_k + \mathbf{\Sigma}_{k+1} \right)^{-1} (\mathbf{m}_{k+1} - \mathbf{m}_k) \right)}. \]
     Поскольку
     \[ \left| (\mathbf{m}_{k+1} - \mathbf{m}_k)\T \left( \mathbf{\Sigma}_k + \mathbf{\Sigma}_{k+1} \right)^{-1} (\mathbf{m}_{k+1} - \mathbf{m}_k) \right| \leqslant \| \mathbf{m}_{k+1} - \mathbf{m}_k \|_2^2 \| \left( \mathbf{\Sigma}_k + \mathbf{\Sigma}_{k+1} \right)^{-1} \|_2 \to 0 \]
@@ -89,7 +89,7 @@
     \[ \leqslant \dfrac{1}{\lambda_{\min}\left( \bI + \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1} \bx_{k+1} \bx_{k+1}\T \right)} \dfrac{\left\| \bx_{k+1} \right\|_2^2}{\lambda_{\min}\left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)} \leqslant \]
     \[ \leqslant \dfrac{1}{1 + \lambda_{\min}\left(\left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1} \bx_{k+1} \bx_{k+1}\T \right)} \dfrac{M^2}{\lambda_{\min}\left( \bX_k\T \bX_k \right)} \leqslant \]
     Минимальное собственное значение произведения матриц оценивается произведением их минимальных собственных значений. Кроме того, минимальное собственное значение матрицы единичного ранга $\bx_{k+1} \bx_{k+1}\T$ равно нулю.
-    \[ \leqslant \dfrac{1}{1 + \lambda_{\max}\left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right) \lambda_{\min}\left( \bx_{k+1} \bx_{k+1}\T \right)} \dfrac{1}{\lambda_{\min}\left( \bX_k\T \bX_k \right)} M^2 = \dfrac{M^2}{\lambda_{\min}\left( \bX_k\T \bX_k \right)}. \]
+    \[ \leqslant \dfrac{1}{1 + \lambda_{\max}\left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right) \lambda_{\min}\left( \bx_{k+1} \bx_{k+1}\T \right)} \dfrac{M^2}{\lambda_{\min}\left( \bX_k\T \bX_k \right)} = \dfrac{M^2}{\lambda_{\min}\left( \bX_k\T \bX_k \right)}. \]
     Второй и третий множители первого слагаемого оцениваются следующим образом.
     \[ \left\| \left( \bX_k\T \bX_k + \alpha \sigma^2 \bI \right)^{-1} \right\|_2 \left\| \bX_k\T \by_k \right\|_2 \leqslant \dfrac{\left\| \bX_k\T \by_k \right\|_2}{\lambda_{\min}\left( \bX_k\T \bX_k \right)} = \dfrac{\left\| \sum\limits_{i=1}^{k} \bx_i y_i \right\|_2}{\lambda_{\min}\left( \bX_k\T \bX_k \right)} \leqslant \dfrac{k M^2}{\lambda_{\min}\left( \bX_k\T \bX_k \right)} \]
     Наконец, оценим второе слагаемое.

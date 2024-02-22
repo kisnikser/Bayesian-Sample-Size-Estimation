@@ -192,12 +192,12 @@ class Forecaster:
 
 class Visualizer:
     
-    def __init__(self, sample_sizes, means, variances, loss=False) -> None:
+    def __init__(self, sample_sizes, means, variances, loss=False, format="pdf") -> None:
         self.sample_sizes = sample_sizes
         self.means = means
         self.variances = variances
         self.loss = loss
-        
+        self.format = format
     
     def plot_bootstrap(self, save=False, filename=None):
     
@@ -231,7 +231,7 @@ class Visualizer:
 
         fig.tight_layout()
         if save:
-            plt.savefig(filename, bbox_inches="tight")
+            plt.savefig(filename, bbox_inches="tight", format=self.format)
         plt.show()
 
     
@@ -256,10 +256,10 @@ class Visualizer:
 
         ax1.plot(sample_sizes, means, label=r"$\mathbb{E}_{\mathfrak{D}_k} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)$")
         ax1.fill_between(sample_sizes, means - stds, means + stds, alpha=0.3, label=r"$\pm \sqrt{\mathbb{D}_{\mathfrak{D}_k} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)}$")
-        ax1.vlines(m_star_variance, min(means - stds), means[m_star_variance_idx], colors='red', linestyle='dashed', linewidth=1)
-        ax1.scatter(m_star_variance, means[m_star_variance_idx], marker='o', color='red')
-        ax1.vlines(m_star_rate, min(means - stds), means[m_star_rate_idx], colors='green', linestyle='dashed', linewidth=1)
-        ax1.scatter(m_star_rate, means[m_star_rate_idx], marker='o', color='green')
+        ax1.vlines(m_star_variance, min(means - stds), means[m_star_variance_idx], linestyle='dashed', linewidth=1)
+        ax1.scatter(m_star_variance, means[m_star_variance_idx], marker='o')
+        ax1.vlines(m_star_rate, min(means - stds), means[m_star_rate_idx], linestyle='dashed', linewidth=1)
+        ax1.scatter(m_star_rate, means[m_star_rate_idx], marker='^')
         ax1.set_xlabel(r"$k$")
         if loss:
             ax1.set_ylabel(r"$-Loss$")
@@ -268,20 +268,20 @@ class Visualizer:
         ax1.legend(loc="lower right")
 
         ax2.plot(sample_sizes, D(means, variances))
-        ax2.vlines(m_star_variance, 0, D(means, variances)[m_star_variance_idx], colors='red', linestyle='dashed', linewidth=1)
-        ax2.scatter(m_star_variance, D(means, variances)[m_star_variance_idx], marker='o', color='red', label="D-sufficient")
-        ax2.vlines(m_star_rate, 0, D(means, variances)[m_star_rate_idx], colors='green', linestyle='dashed', linewidth=1)
-        ax2.scatter(m_star_rate, D(means, variances)[m_star_rate_idx], marker='o', color='green')
+        ax2.vlines(m_star_variance, 0, D(means, variances)[m_star_variance_idx], linestyle='dashed', linewidth=1)
+        ax2.scatter(m_star_variance, D(means, variances)[m_star_variance_idx], marker='o', label="D-sufficient")
+        ax2.vlines(m_star_rate, 0, D(means, variances)[m_star_rate_idx], linestyle='dashed', linewidth=1)
+        ax2.scatter(m_star_rate, D(means, variances)[m_star_rate_idx], marker='^')
         ax2.set_xlabel(r"$k$")
         ax2.set_ylabel(r"$D(k)$")
         ax2.set_yscale('log')
         ax2.legend(loc="upper right")
 
         ax3.plot(sample_sizes[:-1], M(means, stds))
-        ax3.vlines(m_star_variance, 0, M(means, stds)[m_star_variance_idx], colors='red', linestyle='dashed', linewidth=1)
-        ax3.scatter(m_star_variance, M(means, stds)[m_star_variance_idx], marker='o', color='red')
-        ax3.vlines(m_star_rate, 0, M(means, stds)[m_star_rate_idx], colors='green', linestyle='dashed', linewidth=1)
-        ax3.scatter(m_star_rate, M(means, stds)[m_star_rate_idx], marker='o', color='green', label="M-sufficient")
+        ax3.vlines(m_star_variance, 0, M(means, stds)[m_star_variance_idx], linestyle='dashed', linewidth=1)
+        ax3.scatter(m_star_variance, M(means, stds)[m_star_variance_idx], marker='o')
+        ax3.vlines(m_star_rate, 0, M(means, stds)[m_star_rate_idx], linestyle='dashed', linewidth=1)
+        ax3.scatter(m_star_rate, M(means, stds)[m_star_rate_idx], marker='^', label="M-sufficient")
         ax3.set_xlabel(r"$k$")
         ax3.set_ylabel(r"$M(k)$")
         ax3.set_yscale('log')
@@ -289,7 +289,7 @@ class Visualizer:
 
         plt.tight_layout()
         if save:
-            plt.savefig(filename, bbox_inches="tight")
+            plt.savefig(filename, bbox_inches="tight", format=self.format)
         plt.show()
         
         
@@ -331,7 +331,7 @@ class Visualizer:
 
         plt.tight_layout()
         if save:
-            plt.savefig(filename, bbox_inches="tight")
+            plt.savefig(filename, bbox_inches="tight", format=self.format)
         plt.show()
         
         
@@ -362,10 +362,10 @@ class Visualizer:
         ax1.fill_between(sample_sizes, means - stds, means + stds, alpha=0.3)
         ax1.plot(sample_sizes, means_approximation, label="Approximation")
         ax1.fill_between(sample_sizes, means_approximation - stds_approximation, means_approximation + stds_approximation, alpha=0.3)
-        ax1.vlines(m_star_variance, min(means_approximation - stds_approximation), means_approximation[m_star_variance_idx], colors='red', linestyle='dashed', linewidth=1)
-        ax1.scatter(m_star_variance, means_approximation[m_star_variance_idx], marker='o', color='red')
-        ax1.vlines(m_star_rate, min(means_approximation - stds_approximation), means_approximation[m_star_rate_idx], colors='green', linestyle='dashed', linewidth=1)
-        ax1.scatter(m_star_rate, means_approximation[m_star_rate_idx], marker='o', color='green')
+        ax1.vlines(m_star_variance, min(means_approximation - stds_approximation), means_approximation[m_star_variance_idx], linestyle='dashed', linewidth=1)
+        ax1.scatter(m_star_variance, means_approximation[m_star_variance_idx], marker='o')
+        ax1.vlines(m_star_rate, min(means_approximation - stds_approximation), means_approximation[m_star_rate_idx], linestyle='dashed', linewidth=1)
+        ax1.scatter(m_star_rate, means_approximation[m_star_rate_idx], marker='^')
         ax1.set_xlabel(r"$k$")
         if loss:
             ax1.set_ylabel(r"$-Loss$")
@@ -375,10 +375,10 @@ class Visualizer:
 
         ax2.plot(sample_sizes, D(means, variances), label="True")
         ax2.plot(sample_sizes, D(means_approximation, variances_approximation), label="Approximation")
-        ax2.vlines(m_star_variance, 0, D(means_approximation, variances_approximation)[m_star_variance_idx], colors='red', linestyle='dashed', linewidth=1)
-        ax2.scatter(m_star_variance, D(means_approximation, variances_approximation)[m_star_variance_idx], marker='o', color='red', label=f"D-sufficient")
-        ax2.vlines(m_star_rate, 0, D(means_approximation, variances_approximation)[m_star_rate_idx], colors='green', linestyle='dashed', linewidth=1)
-        ax2.scatter(m_star_rate, D(means_approximation, variances_approximation)[m_star_rate_idx], marker='o', color='green')
+        ax2.vlines(m_star_variance, 0, D(means_approximation, variances_approximation)[m_star_variance_idx], linestyle='dashed', linewidth=1)
+        ax2.scatter(m_star_variance, D(means_approximation, variances_approximation)[m_star_variance_idx], marker='o', label=f"D-sufficient")
+        ax2.vlines(m_star_rate, 0, D(means_approximation, variances_approximation)[m_star_rate_idx], linestyle='dashed', linewidth=1)
+        ax2.scatter(m_star_rate, D(means_approximation, variances_approximation)[m_star_rate_idx], marker='^')
         ax2.set_xlabel(r"$k$")
         ax2.set_ylabel(r"$D(k)$")
         ax2.set_yscale('log')
@@ -386,10 +386,10 @@ class Visualizer:
 
         ax3.plot(sample_sizes[:-1], M(means, variances), label="True")
         ax3.plot(sample_sizes[:-1], M(means_approximation, variances_approximation), label="Approximation")
-        ax3.vlines(m_star_variance, 0, M(means_approximation, variances_approximation)[m_star_variance_idx], colors='red', linestyle='dashed', linewidth=1)
-        ax3.scatter(m_star_variance, M(means_approximation, variances_approximation)[m_star_variance_idx], marker='o', color='red')
-        ax3.vlines(m_star_rate, 0, M(means_approximation, variances_approximation)[m_star_rate_idx], colors='green', linestyle='dashed', linewidth=1)
-        ax3.scatter(m_star_rate, M(means_approximation, variances_approximation)[m_star_rate_idx], marker='o', color='green', label=f"M-sufficient")
+        ax3.vlines(m_star_variance, 0, M(means_approximation, variances_approximation)[m_star_variance_idx], linestyle='dashed', linewidth=1)
+        ax3.scatter(m_star_variance, M(means_approximation, variances_approximation)[m_star_variance_idx], marker='o')
+        ax3.vlines(m_star_rate, 0, M(means_approximation, variances_approximation)[m_star_rate_idx], linestyle='dashed', linewidth=1)
+        ax3.scatter(m_star_rate, M(means_approximation, variances_approximation)[m_star_rate_idx], marker='^', label=f"M-sufficient")
         ax3.set_xlabel(r"$k$")
         ax3.set_ylabel(r"$M(k)$")
         ax3.set_yscale('log')
@@ -397,5 +397,5 @@ class Visualizer:
 
         plt.tight_layout()
         if save:
-            plt.savefig(filename, bbox_inches="tight")
+            plt.savefig(filename, bbox_inches="tight", format=self.format)
         plt.show()
