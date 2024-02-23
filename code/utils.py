@@ -198,6 +198,7 @@ class Visualizer:
         self.variances = variances
         self.loss = loss
         self.format = format
+        self.color_between = "gray" if self.format == "eps" else None
     
     def plot_bootstrap(self, save=False, filename=None):
     
@@ -211,7 +212,7 @@ class Visualizer:
         stds = np.sqrt(variances)
 
         ax1.plot(sample_sizes, means, label=r"$\mathbb{E}_{\mathfrak{D}_k} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)$")
-        ax1.fill_between(sample_sizes, means - stds, means + stds, alpha=0.3, label=r"$\pm \sqrt{\mathbb{D}_{\mathfrak{D}_k} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)}$")
+        ax1.fill_between(sample_sizes, means - stds, means + stds, alpha=0.3, color=self.color_between, label=r"$\pm \sqrt{\mathbb{D}_{\mathfrak{D}_k} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)}$")
         ax1.set_xlabel(r"$k$")
         if loss:
             ax1.set_ylabel(r"$-Loss$")
@@ -231,7 +232,7 @@ class Visualizer:
 
         fig.tight_layout()
         if save:
-            plt.savefig(filename, bbox_inches="tight", format=self.format)
+            plt.savefig(filename+f".{self.format}", bbox_inches="tight")
         plt.show()
 
     
@@ -255,7 +256,7 @@ class Visualizer:
         stds = np.sqrt(variances)
 
         ax1.plot(sample_sizes, means, label=r"$\mathbb{E}_{\mathfrak{D}_k} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)$")
-        ax1.fill_between(sample_sizes, means - stds, means + stds, alpha=0.3, label=r"$\pm \sqrt{\mathbb{D}_{\mathfrak{D}_k} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)}$")
+        ax1.fill_between(sample_sizes, means - stds, means + stds, alpha=0.3, color=self.color_between, label=r"$\pm \sqrt{\mathbb{D}_{\mathfrak{D}_k} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)}$")
         ax1.vlines(m_star_variance, min(means - stds), means[m_star_variance_idx], linestyle='dashed', linewidth=1)
         ax1.scatter(m_star_variance, means[m_star_variance_idx], marker='o')
         ax1.vlines(m_star_rate, min(means - stds), means[m_star_rate_idx], linestyle='dashed', linewidth=1)
@@ -289,7 +290,7 @@ class Visualizer:
 
         plt.tight_layout()
         if save:
-            plt.savefig(filename, bbox_inches="tight", format=self.format)
+            plt.savefig(filename+f".{self.format}", bbox_inches="tight")
         plt.show()
         
         
@@ -331,7 +332,7 @@ class Visualizer:
 
         plt.tight_layout()
         if save:
-            plt.savefig(filename, bbox_inches="tight", format=self.format)
+            plt.savefig(filename+f".{self.format}", bbox_inches="tight")
         plt.show()
         
         
@@ -359,9 +360,9 @@ class Visualizer:
         stds_approximation = np.sqrt(variances_approximation)
 
         ax1.plot(sample_sizes, means, label="True")
-        ax1.fill_between(sample_sizes, means - stds, means + stds, alpha=0.3)
+        ax1.fill_between(sample_sizes, means - stds, means + stds, color=self.color_between, alpha=0.3)
         ax1.plot(sample_sizes, means_approximation, label="Approximation")
-        ax1.fill_between(sample_sizes, means_approximation - stds_approximation, means_approximation + stds_approximation, alpha=0.3)
+        ax1.fill_between(sample_sizes, means_approximation - stds_approximation, means_approximation + stds_approximation, color=self.color_between,  alpha=0.3)
         ax1.vlines(m_star_variance, min(means_approximation - stds_approximation), means_approximation[m_star_variance_idx], linestyle='dashed', linewidth=1)
         ax1.scatter(m_star_variance, means_approximation[m_star_variance_idx], marker='o')
         ax1.vlines(m_star_rate, min(means_approximation - stds_approximation), means_approximation[m_star_rate_idx], linestyle='dashed', linewidth=1)
@@ -397,5 +398,5 @@ class Visualizer:
 
         plt.tight_layout()
         if save:
-            plt.savefig(filename, bbox_inches="tight", format=self.format)
+            plt.savefig(filename+f".{self.format}", bbox_inches="tight")
         plt.show()

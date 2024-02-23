@@ -10,7 +10,7 @@
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.9\textwidth]{figures/synthetic-regression-functions.pdf}
+    \includegraphics[width=0.9\textwidth]{synthetic-regression-functions}
     \caption{Сходимость функций для синтетической выборки (линейная регрессия)}
     \label{synthetic-regression-functions}
 \end{figure}
@@ -23,7 +23,7 @@
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{figures/synthetic-regression-sufficient.pdf}
+    \includegraphics[width=\textwidth]{synthetic-regression-sufficient}
     \caption{Синтетическая выборка (линейная регрессия) при $m^* \leqslant m$}
     \label{synthetic-regression-sufficient}
 \end{figure}
@@ -32,7 +32,7 @@
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{figures/synthetic-classification-sufficient.pdf}
+    \includegraphics[width=\textwidth]{synthetic-classification-sufficient}
     \caption{Синтетическая выборка (логистическая регрессия) при $m^* \leqslant m$}
     \label{synthetic-classification-sufficient}
 \end{figure}
@@ -41,7 +41,7 @@
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{figures/abalone-sufficient.pdf}
+    \includegraphics[width=\textwidth]{abalone-sufficient}
     \caption{Выборка Abalone (регрессия) при $m^* \leqslant m$}
     \label{abalone-sufficient}
 \end{figure}
@@ -50,25 +50,25 @@
 
 \subsubsection{Определение параметрического семейства функций с помощью генетического алгоритма}
 
-Реализацию генетического алгоритма, приведенного в разделе \ref{ga}, можно найти в \href{https://github.com/kisnikser/Bayesian-Sample-Size-Estimation/tree/main/code/genetic_algorithm}{репозитории}. Для исследования зависимости функции ошибки от используемого размера выборки в задаче регрессии использовались следующие датасеты из \citep{UCI}: Abalone, Auto MPG, Liver Disorders, Wine Quality, Parkinsons Telemonitoring, Bike Sharing Dataset, Real estate valuation и Heart failure clinical records. Была выбрана квадратичная функция потерь MSE. Задача регрессии для каждого из них решалась с помощью линейной регрессии из \citep{scikit-learn}. Усреднение производилось по $B = 100$ бутстрап-выборкам. Как было сказано ранее, все зависимости приводятся к одинаковому масштабу по обеим осям. Полученные графики представлены на Рис.~\ref{datasets_regression}. Слева находится график для выборочного среднего. Справа находится график для выборочного среднеквадратичного отклонения.
+Реализацию генетического алгоритма, приведенного в разделе \ref{ga}, можно найти в \href{https://github.com/kisnikser/Bayesian-Sample-Size-Estimation/tree/main/code/genetic_algorithm}{репозитории}. Для исследования зависимости функции ошибки от используемого размера выборки в задаче регрессии использовались следующие датасеты из \citep{UCI}: Abalone, Auto MPG, Liver Disorders, Wine Quality, Parkinsons Telemonitoring, Bike Sharing Dataset, Real estate valuation и Heart failure clinical records. Была выбрана квадратичная функция потерь MSE. Задача регрессии для каждого из них решалась с помощью линейной регрессии из \citep{scikit-learn}. Усреднение производилось по $B = 100$ бутстрап-выборкам. Как было сказано ранее, все зависимости приводятся к одинаковому масштабу по обеим осям. Полученные графики представлены на Рис.~\ref{datasets-regression}. Слева находится график для выборочного среднего. Справа находится график для выборочного среднеквадратичного отклонения.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{figures/datasets_regression.pdf}
+    \includegraphics[width=\textwidth]{datasets-regression}
     \caption{Поведение функции ошибки в задаче регрессии}
-    \label{datasets_regression}
+    \label{datasets-regression}
 \end{figure}
 
 Применение генетического алгоритма приводит к одинаковому семейству функций для аппроксимации среднего и среднеквадратичного отклонения в задаче регрессии:
 \[ w_0 + w_1 \cdot \exp(w_2 \cdot x). \]
 
-В задаче классификации использовалось 12 датасетов из \citep{UCI}: Automobile, Breast Cancer Wisconsin (Diagnostic), Car Evaluation, Credit Approval, Glass Identification, Ionosphere, Iris, Tic-Tac-Toe Endgame, Congressional Voting Records, Wine, Zoo и Heart failure clinical records. Задача классификации для каждого из них решалась с помощью логистической регрессии из \citep{scikit-learn}. Усреднение производилось по $B = 100$ бутстрап-выборкам. Все завимисости также приводятся к одинаковому масштабу по обеим осям. Полученные графики представлены на Рис.~\ref{datasets_classification}. Как и ранее, слева находится график для выборочного среднего, справа находится график для выборочного среднеквадратичного отклонения.
+В задаче классификации использовалось 12 датасетов из \citep{UCI}: Automobile, Breast Cancer Wisconsin (Diagnostic), Car Evaluation, Credit Approval, Glass Identification, Ionosphere, Iris, Tic-Tac-Toe Endgame, Congressional Voting Records, Wine, Zoo и Heart failure clinical records. Задача классификации для каждого из них решалась с помощью логистической регрессии из \citep{scikit-learn}. Усреднение производилось по $B = 100$ бутстрап-выборкам. Все завимисости также приводятся к одинаковому масштабу по обеим осям. Полученные графики представлены на Рис.~\ref{datasets-classification}. Как и ранее, слева находится график для выборочного среднего, справа находится график для выборочного среднеквадратичного отклонения.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{figures/datasets_classification.pdf}
+    \includegraphics[width=\textwidth]{datasets-classification}
     \caption{Поведение функции ошибки в задаче классификации}
-    \label{datasets_classification}
+    \label{datasets-classification}
 \end{figure}
 
 Применение генетического алгоритма для среднего значения приводит к такому же семейству функций, как и в задаче регрессии:
@@ -84,14 +84,14 @@
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{figures/synthetic-regression-approximation.pdf}
+    \includegraphics[width=\textwidth]{synthetic-regression-approximation}
     \caption{Синтетическая выборка (линейная регрессия) при $m^* > m$}
     \label{synthetic-regression-approximation}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{figures/synthetic-classification-approximation.pdf}
+    \includegraphics[width=\textwidth]{synthetic-classification-approximation}
     \caption{Синтетическая выборка (логистическая регрессия) при $m^* > m$}
     \label{synthetic-classification-approximation}
 \end{figure}
@@ -100,7 +100,7 @@
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{figures/abalone-approximation.pdf}
+    \includegraphics[width=\textwidth]{abalone-approximation}
     \caption{Выборка Abalone (регрессия) при $m^* > m$}
     \label{abalone-approximation}
 \end{figure}

@@ -51,7 +51,9 @@ centertags]%
 
 % Text of article starts here.
 
+% ====================
 \section{Introduction}
+% ====================
 
 The task of supervised machine learning involves selecting a predictive model from a parametric family. This choice is usually based on certain statistical hypotheses, such as maximizing a quality functional.
 
@@ -79,7 +81,9 @@ In \cite{MOTRENKO2014743} a method for determining sample size in logistic regre
 
 This work utilizes a genetic algorithm \citep{Goldberg1988} to approximate a given set of functions. A genetic algorithm is an optimization process of a population of candidates (referred to as individuals) evolving towards better solutions \citep{Mirjalili2019}. Each individual has a set of characteristics (genes or phenotypes) that can change during evolution. Changes occur through crossover or mutation operations. Evolution starts with a random population, and each generation is considered as a basis for generating the next one. The fitness of individuals is measured in each generation, and individuals with high fitness are selected to create a new generation \citep{Kramer2017}. The algorithm terminates after reaching the maximum number of generations or achieving satisfactory results. Thus, each new generation becomes more adapted to the environment.
 
+% =========================
 \section{Problem statement}
+% =========================
 
 An object is defined as a pair $(\mathbf{x}, y)$, where $\mathbf{x} \in \mathbb{X} \subseteq \mathbb{R}^n$ is the feature vector, and $y \in \mathbb{Y}$ is the target variable. In regression problems $\mathbb{Y} = \mathbb{R}$, and in $K$-class classification problems $\mathbb{Y} = \{1, \ldots, K\}$.
 
@@ -109,11 +113,15 @@ The task is to determine the sufficient sample size $m^*$. Let a criterion $T$ b
 \end{definition}
 It should be noted that it is possible for $m^* \leqslant m$ or $m^* > m$. These two cases will be considered separately later on.
 
+% ============================================================================
 \section{Sufficient sample size does not exceed the available one}\label{sec2}
+% ============================================================================
 
 In this section, we will assume that $m^*\leqslant m$ is valid. This means that we just need to formalize which sample size can be considered sufficient.
 
+% --------------------------------------------------------------
 \subsection{Analysis of the behavior of the likelihood function}
+% --------------------------------------------------------------
 
 To determine sufficiency, we will use the likelihood function. When there are enough objects available, it is quite natural to expect that the resulting parameter estimate will not change much from one sample realization to another \cite{Joseph1997, Joseph1995}. The same can be said about the likelihood function. Thus, we formulate which sample size can be considered sufficient.
 
@@ -150,7 +158,9 @@ By condition, one sample is given. Therefore, in the experiment it is not possib
 
 The definitions proposed above can also be applied in those problems where an arbitrary loss function is minimized rather than the likelihood function is maximized. We do not provide any theoretical justification for this, but in practice such a heuristic turns out to be quite successful.
 
+% ---------------------------------------------------------------------
 \subsection{Analysis of the posterior distribution of model parameters}
+% ---------------------------------------------------------------------
 
 In \citep{MOTRENKO2014743}, it is proposed to use the Kullback-Leibler divergence to estimate a sufficient sample size in a binary classification problem. The idea is based on the fact that if two subsamples differ from each other by one object, then the posterior distributions obtained from them should be close. This proximity is determined by the Kullback-Leibler divergence. 
 
@@ -198,13 +208,17 @@ Let the linear regression model have a normal prior distribution of parameters. 
     Let the sets of values of the features and the target variable be bounded, that is, $\exists M\in \mathbb{R}:$ $\|\mathbf{x}\|_2\leqslant M$ and $|y|\leqslant M$. If $\lambda_{\min}\left(\mathbf{X}^{\top}_k \mathbf{X}_k \right) = \omega(\sqrt{k})$ for $k\to \infty$, then in a linear regression model with a normal prior distribution of parameters $\|\mathbf{m}_{k+1} - \mathbf{m}_k\|_2\to 0$ and $\|\mathbf{\Sigma}_{k+1} - \mathbf{\Sigma}_k\|_{F}\to 0$ as $k\to \infty$.
 \end{theorem}
 
+% ===================================================================
 \section{Sufficient sample size is larger than available}\label{sec3}
+% ===================================================================
 
 In this section, we will assume that $m^*> m$ is valid.
 
 The problem arises of predicting the mathematical expectation of the likelihood function / loss function at $k > m$. In general, this is quite a difficult task. In this paper, it is proposed to analyze a large number of open datasets from \citep{UCI} in order to find a parametric family of functions that should approximate the dependence of the loss function on the sample size used. It is proposed to study datasets with regression and classification tasks separately.
 
+% ----------------------------------------------------------------------------------------
 \subsection{A genetic algorithm in the task of approximating a set of functions}\label{ga}
+% ----------------------------------------------------------------------------------------
 
 One of the simplest search algorithms in terms of implementation and logic is the genetic algorithm. Using it, we will build a method for finding the desired family of functions. 
 
@@ -219,32 +233,40 @@ The crossover is implemented in such a way that a random subtree of one of the p
 
 The algorithm terminates after a given number of generations. An individual from the last generation with the best fitness is selected. The solution is an appropriate parametric family of functions.
 
+% ============================================
 \section{Computational experiment}\label{sec4}
+% ============================================
 
 An experiment has been conducted to analyze the properties of the proposed methods for estimating a sufficient sample size. The experiment consists of several parts. In the first part, estimates of a sufficient sample size are considered in the case when a sufficient sample size does not exceed the available one. The second part examines the results obtained under the conditions that a sufficient sample size is larger than the available one.
 
-\subsection{A sufficient sample size does not exceed the available one}
+% -------------------------------------------------------------------
+\subsection{Sufficient sample size does not exceed the available one}
+% -------------------------------------------------------------------
 
+% ...................................................
 \subsubsection{Convergence of the proposed functions}
+% ...................................................
 
 Synthetic data is generated from a linear regression model. The number of objects is 1000, the number of features is 20. One object is sequentially removed from the given sample until the number of objects in the subsample is equal to the number of features. This process is repeated $B=1000$ times. As a result, for each sample size $k$, the value of each of the functions $D(k)$, $M(k)$, $KL(k)$ and $S(k)$ defined in Chapter~\ref{sec2} is obtained (the logarithm of the likelihood function is used here). The following is a Fig.~\ref{synthetic-regression-functions}, which shows the resulting dependencies.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.9\textwidth]{paper/figures/synthetic-regression-functions.pdf}
+    \includegraphics[width=0.9\textwidth]{../paper/figures/gray/eps/synthetic-regression-functions}
     \caption{Convergence of functions for synthetic sampling (linear regression)}
     \label{synthetic-regression-functions}
 \end{figure}
 
 The graphs obtained confirm the results obtained in the Theorems \ref{theorem1}, \ref{theorem2} and \ref{theorem3}. The values of the functions $D(k)$, $M(k)$ and $KL(k)$ tend to zero as the size of the subsample increases. The values of $S(k)$ tend to one as the size of the subsample increases.
 
+% ..................................................
 \subsubsection{Determining a sufficient sample size}
+% ..................................................
 
 Synthetic data is generated from a linear regression model. The number of objects is 1000, the number of features is 20. The following are graphs of the logarithm of the likelihood function of the sample, as well as the functions $D(k)$ and $M(k)$ for the logarithm of the likelihood function. $B=1000$ bootstrap samples were used. The definition of D-sufficient and M-sufficient sample sizes has been performed. For D-sufficiency, $\varepsilon = 3 \cdot 10^{1}$ is selected, for M-sufficiency $\varepsilon = 4 \cdot 10^{-1}$. The results are shown in Fig.~\ref{synthetic-regression-sufficient}. 
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{paper/figures/synthetic-regression-sufficient.pdf}
+    \includegraphics[width=\textwidth]{../paper/figures/gray/eps/synthetic-regression-sufficient}
     \caption{Synthetic sample (linear regression) at $m^*\leqslant m$}
     \label{synthetic-regression-sufficient}
 \end{figure}
@@ -253,7 +275,7 @@ The second synthetic sample is generated from a logistic regression model. The n
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{paper/figures/synthetic-classification-sufficient.pdf}
+    \includegraphics[width=\textwidth]{../paper/figures/gray/eps/synthetic-classification-sufficient}
     \caption{Synthetic sample (logistic regression) at $m^* \leqslant m$}
     \label{synthetic-classification-sufficient}
 \end{figure}
@@ -262,34 +284,38 @@ The following is an example of determining a sufficient sample size based on rea
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{paper/figures/abalone-sufficient.pdf}
+    \includegraphics[width=\textwidth]{../paper/figures/gray/eps/abalone-sufficient}
     \caption{Abalone sample (regression) at $m^*\leqslant m$}
     \label{abalone-sufficient}
 \end{figure}
 
-\subsection{A sufficient sample size is larger than the available one}
+% ------------------------------------------------------------------
+\subsection{Sufficient sample size is larger than the available one}
+% ------------------------------------------------------------------
 
+% .........................................................................................
 \subsubsection{Determination of a parametric family of functions using a genetic algorithm}
+% .........................................................................................
 
-The implementation of the genetic algorithm given in the section \ref{ga} can be found in the repository \texttt{https://github.com/kisnikser/Bayesian-Sample-Size-Estimation}. To analyze the dependence of the loss function on the sample size used in the regression task, the following datasets from \citep{UCI} were used: Abalone, Auto MPG, Liver Disorders, Wine Quality, Parkinsons Telemonitoring, Bike Sharing Dataset, Real estate valuation and Heart failure clinical records. The quadratic loss function MSE was chosen. The regression problem for each of them was solved using linear regression from \citep{scikit-learn}. Averaging was performed on $B = 100$ bootstrap samples. As mentioned earlier, all dependencies are reduced to the same scale on both axes. The resulting graphs are shown in Fig.~\ref{datasets_regression}. On the left is a graph for the sample average. On the right is a graph for the sample standard deviation.
+The implementation of the genetic algorithm given in the section \ref{ga} can be found in the repository \texttt{https://github.com/kisnikser/Bayesian-Sample-Size-Estimation}. To analyze the dependence of the loss function on the sample size used in the regression task, the following datasets from \citep{UCI} were used: Abalone, Auto MPG, Liver Disorders, Wine Quality, Parkinsons Telemonitoring, Bike Sharing Dataset, Real estate valuation and Heart failure clinical records. The quadratic loss function MSE was chosen. The regression problem for each of them was solved using linear regression from \citep{scikit-learn}. Averaging was performed on $B = 100$ bootstrap samples. As mentioned earlier, all dependencies are reduced to the same scale on both axes. The resulting graphs are shown in Fig.~\ref{datasets-regression}. On the left is a graph for the sample average. On the right is a graph for the sample standard deviation.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{paper/figures/datasets_regression.pdf}
+    \includegraphics[width=\textwidth]{../paper/figures/gray/eps/datasets-regression}
     \caption{Behavior of the loss function in the regression problem}
-    \label{datasets_regression}
+    \label{datasets-regression}
 \end{figure}
 
 The application of the genetic algorithm leads to the same family of functions for approximating the mean and standard deviation in the regression problem:
 \[ w_0 + w_1 \cdot \exp(w_2 \cdot x). \]
 
-The classification task used 12 datasets from \citep{UCI}: Automobile, Breast Cancer Wisconsin (Diagnostic), Car Evaluation, Credit Approval, Glass Identification, Ionosphere, Iris, Tic-Tac-Toe Endgame, Congressional Voting Records, Wine, Zoo and Heart failure clinical records. The classification problem for each of them was solved using logistic regression from \citep{scikit-learn}. Averaging was performed on $B = 100$ bootstrap samples. All the curves are also reduced to the same scale on both axes. The resulting graphs are shown in Fig.~\ref{datasets_classification}. As before, there is a graph for the sample mean on the left, and a graph for the sample standard deviation on the right.
+The classification task used 12 datasets from \citep{UCI}: Automobile, Breast Cancer Wisconsin (Diagnostic), Car Evaluation, Credit Approval, Glass Identification, Ionosphere, Iris, Tic-Tac-Toe Endgame, Congressional Voting Records, Wine, Zoo and Heart failure clinical records. The classification problem for each of them was solved using logistic regression from \citep{scikit-learn}. Averaging was performed on $B = 100$ bootstrap samples. All the curves are also reduced to the same scale on both axes. The resulting graphs are shown in Fig.~\ref{datasets-classification}. As before, there is a graph for the sample mean on the left, and a graph for the sample standard deviation on the right.
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{paper/figures/datasets_classification.pdf}
+    \includegraphics[width=\textwidth]{../paper/figures/gray/eps/datasets-classification}
     \caption{Behavior of the loss function in the classification problem}
-    \label{datasets_classification}
+    \label{datasets-classification}
 \end{figure}
 
 The application of a genetic algorithm for the mean value leads to the same family of functions as in the regression problem:
@@ -297,7 +323,9 @@ The application of a genetic algorithm for the mean value leads to the same fami
 
 The standard deviation in the case of a classification problem for each sample has its own dependence on the sample size. Thus, predicting variance for classification turns out to be quite a difficult task.
 
+% ...................................................
 \subsubsection{Prediction of the likelihood function}
+% ...................................................
 
 For synthetic samples, the approximation of likelihood functions is carried out. The mean and variance are approximated by the parametric family of functions given in the previous paragraph.
 
@@ -305,14 +333,14 @@ The division into training and test samples was carried out in the ratio of 70:3
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{paper/figures/synthetic-regression-approximation.pdf}
+    \includegraphics[width=\textwidth]{../paper/figures/gray/eps/synthetic-regression-approximation}
     \caption{Synthetic sample (linear regression) at $m^*> m$}
     \label{synthetic-regression-approximation}
 \end{figure}
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{paper/figures/synthetic-classification-approximation.pdf}
+    \includegraphics[width=\textwidth]{../paper/figures/gray/eps/synthetic-classification-approximation}
     \caption{Synthetic sample (logistic regression) at $m^*> m$}
     \label{synthetic-classification-approximation}
 \end{figure}
@@ -321,18 +349,22 @@ Next, similar results were obtained for the Abalone sample from \citep{UCI}. The
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=\textwidth]{paper/figures/abalone-approximation.pdf}
+    \includegraphics[width=\textwidth]{../paper/figures/gray/eps/abalone-approximation}
     \caption{Abalone sample (regression) at $m^* > m$}
     \label{abalone-approximation}
 \end{figure}
 
+% ==================
 \section{Conclusion}
+% ==================
 
 Approaches to determining a sufficient sample size based on the values of the likelihood function on the bootstrapped subsamples and the proximity of posterior distributions of model parameters on similar subsamples are proposed. The first two allow you to determine a sufficient sample size on any dataset with a regression or classification task. The correctness of the proposed approaches is proved under certain restrictions on the model used, and a method for predicting the likelihood function in the case of insufficient sample size is proposed. The theorem on the moments of the limit posterior distribution of parameters in a linear regression model is proved. The conducted computational experiment makes it possible to analyze the properties of the proposed methods and their effectiveness. A parametric family of functions approximating the error function for a set of datasets is defined.
 
 \appendix
 
+% ========================================
 \section{Proofs of theorems}\label{append}
+% ========================================
 
 \begin{proof}[Proof (Theorem \ref{theorem1})]
 Consider the definition of an M-sufficient sample size in terms of the logarithm of the likelihood function. In a linear regression model
