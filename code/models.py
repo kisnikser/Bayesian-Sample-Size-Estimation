@@ -68,37 +68,12 @@ class RegressionModel(LinearModel):
             X = self.X
         return X @ params
 
-    def loglikelihood(self, params):
-        # There we assume that y ~ N(y|wx,1)
-        # And we don't consider last term with (2 * pi * sigma^2)^(-m/2)
-        return np.linalg.norm(self.y - self.X @ params)**2 / (-2 * self.y.size)
-    
-    def loss(self, params):
-        return np.linalg.norm(self.y - self.X @ params)**2 / self.y.size
-    
-    def loglikelihood_fixed(self, params):
-        return self.loglikelihood(params) + self.prior.logpdf(params)
-
-    def score(self, params):
-        # score = d/dw log-likelihood(w) (Wikipedia)
-        return self.X.T @ self.y - self.X.T @ self.X @ params
-
-    def score_fixed(self, params):
-        # score = d/dw log-likelihood(w) (Wikipedia)
-        return self.score(params) - self.alpha * params
-
-    def hessian(self, params):
-        # hessian = d^2/dw^2 log-likelihood(w)
-        return -self.X.T @ self.X
-
-    def hessian_fixed(self, params):
-        # hessian = d^2/dw^2 log-likelihood(w)
-        return self.hessian(params) - self.alpha*np.identity(self.n)
-    
-    def covariance(self, params):
-        # Dw = 1 / I(w), where I(w) is Fisher information matrix, i.e.
-        # I(w) = -d^2/dw^2 log-likelihood(w) = -hessian(w)
-        return np.linalg.inv(-self.hessian_fixed(params))
+    def loglikelihood(self, params, X=None, y=None, sigma2=1):
+        if X is None:
+            X = self.X
+        if y is None:
+            y = self.y
+        return -X.shape[0]/2*np.log(2*np.pi*sigma2) - 1/(2*sigma2)*np.sum((y - X @ params)**2)
 
 
 class LogisticModel(LinearModel):
@@ -132,32 +107,14 @@ class LogisticModel(LinearModel):
         if X is None:
             X = self.X
         return expit(X @ params)
-
-    def loglikelihood(self, params):
-        epsilon = 1e-10
-        q = 2 * self.y - 1 # labels 0, 1 -> -1, 1
-        res = expit(q * np.dot(self.X, params))
-        res = res + (res < epsilon)*epsilon
-        return np.sum(np.log(res))
     
-    def loglikelihood_fixed(self, params):
-        return self.loglikelihood(params) + self.prior.logpdf(params)
+    def sigmoid(self, x):
+        x = np.asarray(x)
+        return 1 / (1 + np.exp(-x))
 
-    def score(self, params):
-        # score = d/dw log-likelihood(w) (Wikipedia)
-        # there we get score for labels 0, 1
-        theta = expit(self.X @ params)
-        return np.dot(self.y - theta, self.X)
-    
-    def score_fixed(self, params):
-        return self.score(params) - self.alpha*params
-
-    def hessian(self, params):
-        theta = expit(self.X @ params)
-        return -np.dot(theta * (1-theta) * self.X.T, self.X)
-
-    def hessian_fixed(self, params):
-        return self.hessian(params) - self.alpha*np.identity(self.n)
-
-    def covariance(self, params):
-        return np.linalg.inv(-self.hessian_fixed(params))
+    def loglikelihood(self, params, X=None, y=None):
+        if X is None:
+            X = self.X
+        if y is None:
+            y = self.y
+        return np.sum(np.log(self.sigmoid(y * (X @ params))))

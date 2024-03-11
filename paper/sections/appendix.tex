@@ -6,10 +6,10 @@
     \[ = \left( 2\pi\sigma^2 \right)^{-m/2} \exp\left( -\dfrac{1}{2\sigma^2} \| \by - \bX \hat{\bw}_k \|_2^2 \right). \]
     Прологарифмируем:
     \[ l\left( \mathfrak{D}_m, \hat{\bw}_k \right) = \log p(\by | \bX, \hat{\bw}_k) = -\dfrac{m}{2}\log\left( 2\pi\sigma^2 \right) - \dfrac{1}{2\sigma^2} \| \by - \bX \hat{\bw}_k \|_2^2. \]
-    Возьмем математическое ожидание по $\mathfrak{D}_k$, учитывая, что $\mathbb{E}_{\mathfrak{D}_k}\hat{\bw}_k = \bm_k$ и $\text{cov}(\hat{\bw}_k) = \bSigma_k$:
-    \[ \mathbb{E}_{\mathfrak{D}_k} l\left( \mathfrak{D}_m, \hat{\bw}_k \right) = -\dfrac{m}{2}\log\left( 2\pi\sigma^2 \right) - \dfrac{1}{2\sigma^2} \Big( \| \by - \bX \bm_k \|_2^2 + \text{tr}\left( \bX\T\bX \bSigma_k \right) \Big). \]
+    Возьмем математическое ожидание по $\mathfrak{D}_k$, учитывая, что $\mathbb{E} \hat{\bw}_k = \bm_k$ и $\mathbb{D} \hat{\bw}_k = \bSigma_k$:
+    \[ \mathbb{E}_{\hat{\mathbf{w}}_{k}} l\left( \mathfrak{D}_m, \hat{\bw}_k \right) = -\dfrac{m}{2}\log\left( 2\pi\sigma^2 \right) - \dfrac{1}{2\sigma^2} \Big( \| \by - \bX \bm_k \|_2^2 + \text{tr}\left( \bX\T\bX \bSigma_k \right) \Big). \]
     Запишем выражение для разности математических ожиданий:
-    \[ \mathbb{E}_{\mathfrak{D}_{k+1}} l(\mathfrak{D}_m, \hat{\mathbf{w}}_{k+1}) - \mathbb{E}_{\mathfrak{D}_k} l(\mathfrak{D}_m, \hat{\mathbf{w}}_{k}) = \]
+    \[ \mathbb{E}_{\hat{\mathbf{w}}_{k+1}} l(\mathfrak{D}_m, \hat{\mathbf{w}}_{k+1}) - \mathbb{E}_{\hat{\mathbf{w}}_{k}} l(\mathfrak{D}_m, \hat{\mathbf{w}}_{k}) = \]
     \[ = \dfrac{1}{2\sigma^2} \Big( \| \by - \bX \bm_k \|_2^2 - \| \by - \bX \bm_{k+1} \|_2^2 \Big) + \dfrac{1}{2\sigma^2} \text{tr} \Big( \bX\T\bX \left( \bSigma_k - \bSigma_{k+1} \Big) \right) = \]
     \[ = \dfrac{1}{2\sigma^2} \Big( 2 \by\T \bX (\bm_{k+1} - \bm_k) + (\bm_k - \bm_{k+1})\T \bX\T\bX (\bm_k + \bm_{k+1}) \Big) + \]
     \[ + \dfrac{1}{2\sigma^2} \text{tr} \Big( \bX\T\bX \left( \bSigma_k - \bSigma_{k+1} \right) \Big). \]

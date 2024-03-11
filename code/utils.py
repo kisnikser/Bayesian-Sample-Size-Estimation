@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.optimize import minimize
 from matplotlib import pyplot as plt
+from tqdm import tqdm
 myparams = {
     'text.usetex': True,
     'text.latex.preamble': r'\usepackage{amsfonts}',
@@ -11,9 +12,10 @@ myparams = {
     'lines.linewidth': 2
 }
 plt.rcParams.update(myparams)
+from models import RegressionModel, LogisticModel
 
 
-class Dataset(object):
+class Dataset:
 
     def __init__(self, X, y, task='regression'):
         """
@@ -62,8 +64,10 @@ class Dataset(object):
 
         if self.task == 'classification':
             while True:
-                #X_m = self.X[indexes, :]
-                X_m = self.X.loc[indexes]
+                if isinstance(self.X, np.ndarray):
+                    X_m = self.X[indexes, :] # - это если np.array
+                else:
+                    X_m = self.X.loc[indexes]
                 y_m = self.y[indexes]
                 if len(np.unique(y_m)) < len(self.labels):
                     indexes = np.random.randint(low=0, high=self.m, size=m)
@@ -113,20 +117,25 @@ def func_var_approx(k, w):
     
 
 class Estimator:
-    
-    def __init__(self, sample_sizes, means, variances) -> None:
+    def __init__(self, sample_sizes, means=None, variances=None, divergences=None, scores=None):
         self.sample_sizes = sample_sizes
-        self.means = means
-        self.variances = variances
+        self.means = means # for rate definition
+        self.variances = variances # for variance definition
+        self.divergences = divergences # for kl-div definition
+        self.scores = scores # for s-score definiton
         self.eps = {}
         self.m_star = {}
     
-    
     def sufficient_sample_size(self, eps=1e-4, method="variance"):
+    
+        if method not in ["variance", "rate", "kl-div", "s-score"]:
+            raise NotImplementedError
     
         sample_sizes = self.sample_sizes
         means = self.means
         variances = self.variances
+        divergences = self.divergences
+        scores = self.scores
     
         m_star = np.inf
         
@@ -142,6 +151,20 @@ class Estimator:
                 if diff <= eps and m_star == np.inf:
                     m_star = k
                 elif diff > eps:
+                    m_star = np.inf
+            
+        elif method == "kl-div":
+            for k, div in zip(sample_sizes, divergences):
+                if div <= eps and m_star == np.inf:
+                    m_star = k
+                elif div > eps:
+                    m_star = np.inf
+            
+        elif method == "s-score":
+            for k, score in zip(sample_sizes, scores):
+                if score >= 1 - eps and m_star == np.inf:
+                    m_star = k
+                elif score < 1 - eps:
                     m_star = np.inf
             
         self.eps[method] = eps
@@ -192,10 +215,12 @@ class Forecaster:
 
 class Visualizer:
     
-    def __init__(self, sample_sizes, means, variances, loss=False, format="pdf") -> None:
+    def __init__(self, sample_sizes, means, variances, divergences=None, scores=None, loss=False, format="pdf") -> None:
         self.sample_sizes = sample_sizes
         self.means = means
         self.variances = variances
+        self.divergences = divergences
+        self.scores = scores
         self.loss = loss
         self.format = format
         self.color_between = "gray" if self.format == "eps" else None
@@ -211,8 +236,8 @@ class Visualizer:
         
         stds = np.sqrt(variances)
 
-        ax1.plot(sample_sizes, means, label=r"$\mathbb{E}_{\mathfrak{D}_k} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)$")
-        ax1.fill_between(sample_sizes, means - stds, means + stds, alpha=0.3, color=self.color_between, label=r"$\pm \sqrt{\mathbb{D}_{\mathfrak{D}_k} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)}$")
+        ax1.plot(sample_sizes, means, label=r"$\mathbb{E}_{\hat{\mathbf{w}}_{k}} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)$")
+        ax1.fill_between(sample_sizes, means - stds, means + stds, alpha=0.3, color=self.color_between, label=r"$\pm \sqrt{\mathbb{D}_{\hat{\mathbf{w}}_{k}} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)}$")
         ax1.set_xlabel(r"$k$")
         if loss:
             ax1.set_ylabel(r"$-Loss$")
@@ -255,8 +280,8 @@ class Visualizer:
         
         stds = np.sqrt(variances)
 
-        ax1.plot(sample_sizes, means, label=r"$\mathbb{E}_{\mathfrak{D}_k} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)$")
-        ax1.fill_between(sample_sizes, means - stds, means + stds, alpha=0.3, color=self.color_between, label=r"$\pm \sqrt{\mathbb{D}_{\mathfrak{D}_k} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)}$")
+        ax1.plot(sample_sizes, means, label=r"$\mathbb{E}_{\hat{\mathbf{w}}_{k}} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)$")
+        ax1.fill_between(sample_sizes, means - stds, means + stds, alpha=0.3, color=self.color_between, label=r"$\pm \sqrt{\mathbb{D}_{\hat{\mathbf{w}}_{k}} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)}$")
         ax1.vlines(m_star_variance, min(means - stds), means[m_star_variance_idx], linestyle='dashed', linewidth=1)
         ax1.scatter(m_star_variance, means[m_star_variance_idx], marker='o')
         ax1.vlines(m_star_rate, min(means - stds), means[m_star_rate_idx], linestyle='dashed', linewidth=1)
@@ -293,6 +318,50 @@ class Visualizer:
             plt.savefig(filename+f".{self.format}", bbox_inches="tight")
         plt.show()
         
+    def plot_posterior_sufficient(self, estimator: Estimator, save=False, filename=None):
+        sample_sizes = self.sample_sizes
+        divergences = self.divergences
+        scores = self.scores
+        
+        eps_div = estimator.eps["kl-div"]
+        m_star_div = estimator.m_star["kl-div"]
+        eps_score = estimator.eps["s-score"]
+        m_star_score = estimator.m_star["s-score"]
+
+        m_star_div_idx = sample_sizes.tolist().index(m_star_div)
+        m_star_score_idx = sample_sizes.tolist().index(m_star_score)
+
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10, 4))
+
+        ax1.plot(sample_sizes, divergences, zorder=1)
+        ax1.vlines(m_star_div, 0, divergences[m_star_div_idx], 
+                   linestyle='dashed', linewidth=1, zorder=2, label="KL-sufficient")
+        ax1.scatter(m_star_div, divergences[m_star_div_idx], marker='o', zorder=2)
+        ax1.vlines(m_star_score, 0, divergences[m_star_score_idx], 
+                   linestyle='dotted', linewidth=1, zorder=2)
+        ax1.scatter(m_star_score, divergences[m_star_score_idx], marker='^', zorder=2)
+        ax1.set_xlabel(r"$k$")
+        ax1.set_ylabel(r"$KL(k)$")
+        ax1.set_yscale('log')
+        ax1.legend(loc="upper right")
+
+        ax2.plot(sample_sizes, scores, zorder=1)
+        ax2.vlines(m_star_div, 0, scores[m_star_div_idx], 
+                   linestyle='dashed', linewidth=1, zorder=2)
+        ax2.scatter(m_star_div, scores[m_star_div_idx], marker='o', zorder=2)
+        ax2.vlines(m_star_score, 0, scores[m_star_score_idx], 
+                   linestyle='dotted', linewidth=1, zorder=2, label="S-sufficient")
+        ax2.scatter(m_star_score, scores[m_star_score_idx], marker='^', zorder=2)
+        ax2.set_xlabel(r"$k$")
+        ax2.set_ylabel(r"$S(k)$")
+        #ax2.set_yscale('log')
+        ax2.set_ylim(min(scores), 1)
+        ax2.legend(loc="upper right")
+
+        plt.tight_layout()
+        if save:
+            plt.savefig(filename+f".{self.format}", bbox_inches="tight")
+        plt.show()
         
     def plot_bootstrap_approximation(self, forecaster: Forecaster, save=False, filename=None):
     
@@ -317,7 +386,7 @@ class Visualizer:
         if loss:
             ax1.set_ylabel(r"$-Loss$")
         else:
-            ax1.set_ylabel(r"$\mathbb{E}_{\mathfrak{D}_k} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)$")
+            ax1.set_ylabel(r"$\mathbb{E}_{\hat{\mathbf{w}}_{k}} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)$")
 
         ax2.plot(sample_sizes, variances, label='actual')
         ax2.plot(sample_sizes, variances_approximation, label='approximation')
@@ -327,7 +396,7 @@ class Visualizer:
         if loss:
             ax2.set_ylabel("Variance of loss")
         else:
-            ax2.set_ylabel(r"$\mathbb{D}_{\mathfrak{D}_k} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)$")
+            ax2.set_ylabel(r"$\mathbb{D}_{\hat{\mathbf{w}}_{k}} l(\mathfrak{D}_m, \hat{\mathbf{w}}_k)$")
         ax2.set_yscale('log')
 
         plt.tight_layout()
@@ -400,3 +469,114 @@ class Visualizer:
         if save:
             plt.savefig(filename+f".{self.format}", bbox_inches="tight")
         plt.show()
+        
+        
+def get_norms_and_eigvals(X, B=100):
+    """
+    Args:
+        X: object-feature matrix
+        B: number of epochs
+        
+    Returns:
+        norms: || Xkp1.T @ Xkp1 - Xk.T @ Xk || 
+        eigvals: lambda(Xk.T @ Xk)
+    """
+    norms = []
+    eigvals = []
+
+    for _ in tqdm(range(B)):
+        tmp = []
+        tmp_eigvals = []
+        k = X.shape[0] - 1
+        Xkp1 = X
+        while k > X.shape[1]:
+            index = np.random.randint(k)
+            Xk = np.delete(Xkp1, index, axis=0)
+            tmp.append(np.linalg.norm(Xkp1.T @ Xkp1 - Xk.T @ Xk))
+            tmp_eigvals.append(np.linalg.eigvalsh(Xk.T @ Xk)[0])
+            Xkp1 = Xk
+            k -= 1
+        norms.append(tmp)
+        eigvals.append(tmp_eigvals)
+
+    norms = np.array(norms)
+    norms = norms.mean(axis=0)[::-1]
+    eigvals = np.array(eigvals)
+    eigvals = eigvals.mean(axis=0)[::-1]
+    
+    return norms, eigvals
+
+
+def get_means_and_variances(X, y, sample_sizes=None, task="regression", sigma2=1, B=100):
+    if sample_sizes is None:
+        sample_sizes = np.arange(X.shape[1]+1, X.shape[0])
+        
+    means = []
+    variances = []
+    
+    dataset = Dataset(X, y, task)
+    Model = RegressionModel if task == "regression" else LogisticModel
+
+    for k in tqdm(sample_sizes):
+        tmp = []
+        for _ in range(B):
+            X_k, y_k = dataset.sample(k)
+            model = Model(X_k, y_k)
+            w_hat = model.fit()
+            if task == "regression":  
+                tmp.append(model.loglikelihood(w_hat, X, y, sigma2))
+            else:
+                tmp.append(model.loglikelihood(w_hat, X, y))
+        tmp = np.array(tmp)
+        means.append(tmp.mean())
+        variances.append(tmp.var())
+        
+    means = np.array(means)
+    variances = np.array(variances)
+    
+    return means, variances
+
+
+def posterior_parameters(m0, Sigma0, X, y, sigma2=1):
+    Sigma = np.linalg.inv(np.linalg.inv(Sigma0) + 1/sigma2 * X.T @ X)
+    m = Sigma @ (1/sigma2 * X.T @ y + np.linalg.inv(Sigma0) @ m0)
+    return m, Sigma
+
+
+def KL(mk, Sk, mkp1, Skp1):
+    return 1/2 * (np.trace(np.linalg.inv(Skp1) @ Sk) + (mkp1 - mk) @ np.linalg.inv(Skp1) @ (mkp1 - mk) - mk.size + np.log(np.linalg.det(Skp1) / np.linalg.det(Sk)))
+
+
+def s_score(mk, Sk, mkp1, Skp1):
+    return np.exp(-1/2 * ((mkp1 - mk) @ np.linalg.inv(Sk + Skp1) @ (mkp1 - mk)))
+
+
+def get_divergences_and_scores(X, y, m0, Sigma0, B=100):
+    divergences = []
+    scores = []
+
+    for _ in tqdm(range(B)):
+        
+        tmp_divergences = []
+        tmp_scores = []
+        k = X.shape[0] - 1
+        Xkp1, ykp1 = X, y
+        mkp1, Skp1 = posterior_parameters(m0, Sigma0, Xkp1, ykp1)
+
+        while k >= X.shape[1] + 1:
+            index = np.random.randint(k)
+            Xk, yk = np.delete(Xkp1, index, axis=0), np.delete(ykp1, index, axis=0)
+            mk, Sk = posterior_parameters(m0, Sigma0, Xk, yk)
+            tmp_divergences.append(KL(mk, Sk, mkp1, Skp1))
+            tmp_scores.append(s_score(mk, Sk, mkp1, Skp1))
+            Xkp1, ykp1 = Xk, yk
+            mkp1, Skp1 = mk, Sk
+            k -= 1
+            
+        divergences.append(tmp_divergences)
+        scores.append(tmp_scores)
+        
+    divergences = np.mean(divergences, axis=0)[::-1]
+    scores = np.mean(scores, axis=0)[::-1]
+    
+    return divergences, scores
